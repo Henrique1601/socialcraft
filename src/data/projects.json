@@ -1,0 +1,1367 @@
+{
+  "local": [
+    {
+      "id": "local-1--cronometro",
+      "name": "1° Cronometro",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/1° Cronometro",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-1--tailwindcss",
+      "name": "1º Tailwindcss",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/1º Tailwindcss",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-acquplay-hub",
+      "name": "Acquplay-hub",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Acquplay-hub",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-advice-generator",
+      "name": "Advice generator",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Advice generator",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-age-calculator-app-main",
+      "name": "age-calculator-app-main",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/age-calculator-app-main",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-animated-login",
+      "name": "Animated Login",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Animated Login",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-animeted-registration-html-css-js",
+      "name": "Animeted Registration HTML CSS JS",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Animeted Registration HTML CSS JS",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-aprendizado-dev",
+      "name": "Aprendizado-Dev",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Aprendizado-Dev",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-assets",
+      "name": "assets",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/assets",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-build-a-quiz-app-with-html-css-and-javascript-master",
+      "name": "Build-A-Quiz-App-With-HTML-CSS-and-JavaScript-master",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Build-A-Quiz-App-With-HTML-CSS-and-JavaScript-master",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-calculadora",
+      "name": "calculadora",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/calculadora",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-cartao-nubank",
+      "name": "cartao nubank",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/cartao nubank",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-checker-pass",
+      "name": "Checker pass",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Checker pass",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-conversor-de-bytes",
+      "name": "Conversor de Bytes",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Conversor de Bytes",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-conversor-de-bytes-dinamico",
+      "name": "Conversor de bytes dinamico",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Conversor de bytes dinamico",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-credit-card",
+      "name": "Credit Card",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Credit Card",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-currency-converter",
+      "name": "Currency Converter",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Currency Converter",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-curso-de-bootstrap",
+      "name": "Curso de bootstrap",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Curso de bootstrap",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-depoly-com-mongodb",
+      "name": "Depoly com mongodb",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Depoly com mongodb",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-devquest-",
+      "name": "DevQuest-",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/DevQuest-",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-devsync",
+      "name": "devsync",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/devsync",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-effect-glass",
+      "name": "effect glass",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/effect glass",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-estoque-app",
+      "name": "Estoque-App",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Estoque-App",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-estudos--program-ao",
+      "name": "Estudos--Program-ao",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Estudos--Program-ao",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-everything-claude-code",
+      "name": "everything-claude-code",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/everything-claude-code",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-first-to-do",
+      "name": "First To do",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/First To do",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-form--main",
+      "name": "Form--main",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Form--main",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-formulariosdevs",
+      "name": "FormulariosDevs",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/FormulariosDevs",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-freelancers",
+      "name": "Freelancers",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Freelancers",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-frontend-mentor-nft-main",
+      "name": "Frontend_Mentor-NFT-main",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Frontend_Mentor-NFT-main",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-glass-treinamento--",
+      "name": "GLASS TREINAMENTO +",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/GLASS TREINAMENTO +",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-glassmorphism",
+      "name": "GLASSMORPHISM",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/GLASSMORPHISM",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-google-copia",
+      "name": "Google Copia",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Google Copia",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-guessnunberm",
+      "name": "GuessNunberm",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/GuessNunberm",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-hackercraft",
+      "name": "HackerCraft",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/HackerCraft",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-hydrojexe",
+      "name": "hydrojexe",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/hydrojexe",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-hydrojexe-apps",
+      "name": "Hydrojexe apps",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Hydrojexe apps",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-idk",
+      "name": "IDK",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/IDK",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-jm-motors",
+      "name": "jm-motors",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/jm-motors",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-job-hunter-ai",
+      "name": "job-hunter-ai",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/job-hunter-ai",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-jogo-da-cobrinha",
+      "name": "Jogo da cobrinha",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Jogo da cobrinha",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-landing-page",
+      "name": "landing page",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/landing page",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-landing-page-",
+      "name": "Landing Page²",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Landing Page²",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-link-tree-by-rocketseat",
+      "name": "Link tree by Rocketseat",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Link tree by Rocketseat",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-listofcontacts",
+      "name": "ListofContacts",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/ListofContacts",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-lixo-eletronicos",
+      "name": "Lixo-Eletronicos",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Lixo-Eletronicos",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-login-com-firebase",
+      "name": "login com firebase",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/login com firebase",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-meu-scraper",
+      "name": "meu scraper",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/meu scraper",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-mypc",
+      "name": "MyPC",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/MyPC",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-new",
+      "name": "New",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/New",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-newportifolio",
+      "name": "NewPortifolio",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/NewPortifolio",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-next-js",
+      "name": "Next.js",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Next.js",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-nextstage",
+      "name": "NextStage",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/NextStage",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-nft",
+      "name": "Nft",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Nft",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-nft-treinamento",
+      "name": "NFT TREINAMENTO",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/NFT TREINAMENTO",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-nova-pasta",
+      "name": "Nova pasta",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Nova pasta",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-organizadorcraft",
+      "name": "OrganizadorCraft",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/OrganizadorCraft",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-portfoliodaniel",
+      "name": "portfolioDaniel",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/portfolioDaniel",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-portifolio-daniel",
+      "name": "Portifolio Daniel",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Portifolio Daniel",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-portifolio-",
+      "name": "Portifolio²",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Portifolio²",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-portifolio-",
+      "name": "Portifolio³",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Portifolio³",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-portif-lio",
+      "name": "Portifólio",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Portifólio",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-project3",
+      "name": "project3",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/project3",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-project4",
+      "name": "project4",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/project4",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-projeto-financeiro",
+      "name": "Projeto Financeiro",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Projeto Financeiro",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-promocraft",
+      "name": "PromoCraft",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/PromoCraft",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-prospector-crm",
+      "name": "Prospector-crm",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Prospector-crm",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-qr-code-copia",
+      "name": "Qr code Copia",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Qr code Copia",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-qr-code-generetor",
+      "name": "QR code generetor",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/QR code generetor",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-qr-code-component-main",
+      "name": "qr-code-component-main",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/qr-code-component-main",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-quiz",
+      "name": "Quiz",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Quiz",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-real-watch",
+      "name": "Real Watch",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Real Watch",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-real-video-enhancer",
+      "name": "REAL-Video-Enhancer",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/REAL-Video-Enhancer",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-respnsive-form-main",
+      "name": "Respnsive-form-main",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Respnsive-form-main",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-revarse-enginner",
+      "name": "Revarse Enginner",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Revarse Enginner",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-review-games",
+      "name": "Review-Games",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Review-Games",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-site-de-contatos",
+      "name": "Site_de_contatos",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Site_de_contatos",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-socialcraft",
+      "name": "socialcraft",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/socialcraft",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-speto-romao",
+      "name": "speto-romao",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/speto-romao",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-tela-de-login-com-tema-dark-youtube",
+      "name": "Tela de login com tema dark Youtube",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Tela de login com tema dark Youtube",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-tela-de-login-e-tela-de-cadastrato-com-yt-thi-code",
+      "name": "Tela de login e tela de cadastrato com yt thi code",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Tela de login e tela de cadastrato com yt thi code",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-tela-de-login-simples",
+      "name": "Tela de login simples",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Tela de login simples",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-todo-angular-",
+      "name": "ToDo(angular)",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/ToDo(angular)",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-vivi-henrique",
+      "name": "Vivi-Henrique",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/Vivi-Henrique",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-web-workspace",
+      "name": "WEB_workspace",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/WEB_workspace",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-web-workspace-login-funcioando",
+      "name": "WEB_workspace login funcioando",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/WEB_workspace login funcioando",
+      "desc": "Projeto local no PC"
+    },
+    {
+      "id": "local-web-workspace-s-hash",
+      "name": "WEB_workspace s=hash",
+      "type": "local",
+      "source": "C:/Users/henri/Programacao/Projetos/WEB_workspace s=hash",
+      "desc": "Projeto local no PC"
+    }
+  ],
+  "github": [
+    {
+      "id": "gh-promocraft",
+      "name": "PromoCraft",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/PromoCraft",
+      "desc": "PromoCraft - Agregador e comparador em tempo real de promoções de jogos de PC com alertas de preço e conversão BRL",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-autocontas-web",
+      "name": "autocontas-web",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/autocontas-web",
+      "desc": "Repositório público no GitHub",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-henrique1601",
+      "name": "Henrique1601",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Henrique1601",
+      "desc": "Configurações do meu perfil GitHub - README personalizado",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-rom-launcher",
+      "name": "rom-launcher",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/rom-launcher",
+      "desc": "Next-gen ROM Downloader, Preservation Hub & Desktop GUI Launcher with RetroAchievements, Gamepad Mode & Roulette",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-skiilstoias",
+      "name": "SkiilsToIAs",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/SkiilsToIAs",
+      "desc": "⚡ Sistema Operacional de Engenharia para Agentes Autônomos de IA: 15 Agentes Especialistas em Rede Full-Mesh, 678 Skills e 26 Servidores MCP (Antigravity, Claude Code, Cursor, DevSync)",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-fotos-hidrometros",
+      "name": "fotos-hidrometros",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/fotos-hidrometros",
+      "desc": "📸 PWA mobile-first para coleta de fotos e leitura de hidrômetros por condomínio — capture, preencha índices e exporte PDF/Excel/ZIP, tudo offline.",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-jm-motors-landing",
+      "name": "jm-motors-landing",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/jm-motors-landing",
+      "desc": "🏍️ Landing page oficial da JM Motors — Concessionária de motos novas e seminovas em Santos/SP. TanStack Start, React 19, Tailwind CSS v4, Motion e SEO Local.",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-shots-studio",
+      "name": "shots-studio",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/shots-studio",
+      "desc": "FrameCraft Studio — Modern 3D Mockup Generator with fotorrealistic devices, 4K canvas, multi-slide carousel, video timelines and MCP server integration.",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-omnipdf-studio",
+      "name": "OmniPDF-Studio",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/OmniPDF-Studio",
+      "desc": "OmniPDF Studio - Suíte completa de PDF com TrueEdit, IA, OCR e ferramentas offline",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-devsync",
+      "name": "devsync",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/devsync",
+      "desc": "⚡ Sincronização Git bidirecional entre computadores com automação e prevenção de conflitos",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-open-trainer-engine",
+      "name": "open-trainer-engine",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/open-trainer-engine",
+      "desc": "Next-gen single-player game trainer engine, community mod hub, and in-game HUD overlay system",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-hackercraft",
+      "name": "HackerCraft",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/HackerCraft",
+      "desc": "Plataforma prática e gamificada de cibersegurança, pentest, exploit dev, malware analysis e laboratórios no browser com AI Hacker Tutor.",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-vistoria-cyble-app",
+      "name": "Vistoria-Cyble-App",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Vistoria-Cyble-App",
+      "desc": "PWA para registar fotos de troca de Cyble em apartamentos - funciona offline com IndexedDB",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-pedicini-engenharia",
+      "name": "Pedicini-Engenharia",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Pedicini-Engenharia",
+      "desc": "Repositório público no GitHub",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-acquplay-hub",
+      "name": "Acquplay-hub",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Acquplay-hub",
+      "desc": "🎮 Plataforma web centralizadora e interativa para gestão e entretenimento — React & TypeScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-fotos-hidrometros-luxor",
+      "name": "fotos-hidrometros-luxor",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/fotos-hidrometros-luxor",
+      "desc": "📸 PWA mobile-first para coleta de fotos de hidrômetros do Condomínio Luxor e Lutécia com download imediato (.jpg) e exportações ZIP/PDF/Excel",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-prospector-crm",
+      "name": "Prospector-crm",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Prospector-crm",
+      "desc": "CRM estratégico de prospecção ativa B2B para mapeamento de empresas, qualificação de oportunidades digitais e gestão de follow-ups",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-jarvis",
+      "name": "jarvis",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/jarvis",
+      "desc": "Jarvis: assistente pessoal para Windows e web, com memória Markdown e Gemini",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-basic-portfolio-",
+      "name": "Basic_Portfolio_",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Basic_Portfolio_",
+      "desc": "Portfólio básico e responsivo construído com HTML e CSS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-bot-ofertas-telegram",
+      "name": "bot-ofertas-telegram",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/bot-ofertas-telegram",
+      "desc": "🤖 Bot automatizado em Python (Docker + UV) para monitoramento, curadoria e disparo de ofertas no Telegram",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-estudos--program-ao",
+      "name": "Estudos--Program-ao",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Estudos--Program-ao",
+      "desc": "📚 Repositório de anotações, algoritmos, desafios e prática contínua de programação em Python",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-jm-motors",
+      "name": "jm-motors",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/jm-motors",
+      "desc": "Plataforma e catálogo digital para revenda de motos seminovas e mobilidade elétrica para a JM Motors — TanStack Start, React, Tailwind CSS e TypeScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-lixo-eletronicos",
+      "name": "Lixo-Eletronicos",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Lixo-Eletronicos",
+      "desc": "Repositório público no GitHub",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-calendario-leiturista",
+      "name": "Calendario-Leiturista",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Calendario-Leiturista",
+      "desc": "📅 PWA para organização de calendário, agendamento e escala operacional de rotas de leituristas",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-review-games",
+      "name": "Review-Games",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Review-Games",
+      "desc": "App full-stack para review e descoberta de jogos - React, Node.js e Docker",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-vivi-henrique",
+      "name": "Vivi-Henrique",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Vivi-Henrique",
+      "desc": "Site interativo comemorativo de relacionamento com linha do tempo, mapa de memórias (Leaflet), contador em tempo real e animações — Next.js",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-aprendizado-dev",
+      "name": "Aprendizado-Dev",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Aprendizado-Dev",
+      "desc": "Ambiente e plataforma web para prática e estudo de lógica de programação com editor de código integrado — Next.js, React e Monaco Editor",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-alfabetizacao-web-app",
+      "name": "alfabetizacao-web-app",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/alfabetizacao-web-app",
+      "desc": "Aplicativo web educativo e acessível para apoio à alfabetização e prática de leitura com síntese de voz (TTS) e formação de sílabas — Next.js e React",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-analise-hidrometros",
+      "name": "analise-hidrometros",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/analise-hidrometros",
+      "desc": "Dashboard interativo para análise de consumo de água e detecção de anomalias em hidrômetros a partir de planilhas Excel — React, Vite, Chart.js e Tailwind CSS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-job-hunter-ai",
+      "name": "job-hunter-ai",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/job-hunter-ai",
+      "desc": "Central inteligente para busca e análise de compatibilidade de vagas de tecnologia com inteligência artificial — Next.js, Google Gemini API e Prisma",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-barbearia",
+      "name": "Barbearia",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Barbearia",
+      "desc": "BarberFlow: Micro-SaaS multi-tenant de agendamento online para barbearias integrado ao WhatsApp, com painel administrativo por PIN — Next.js e Prisma",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-devquest-",
+      "name": "DevQuest-",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/DevQuest-",
+      "desc": "Plataforma interativa de estudos para programação com arena de código no navegador, trilhas guiadas e testes — Next.js 15, Neon Postgres, Drizzle e CodeMirror",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-senador-despachos",
+      "name": "senador-despachos",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/senador-despachos",
+      "desc": "Proposta de site institucional para a Senador Despachos, despachante veicular em Santos — React, TypeScript, Vite e atendimento via WhatsApp",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-ciclovolt-electric-hub",
+      "name": "ciclovolt-electric-hub",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/ciclovolt-electric-hub",
+      "desc": "Landing page institucional e catálogo de mobilidade elétrica para a Ciclovolt Veículos Elétricos — TanStack Start, React, Tailwind CSS e TypeScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-financeiro",
+      "name": "Projeto-Financeiro",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-Financeiro",
+      "desc": "Sistema completo de gerenciamento financeiro pessoal com React e CI/CD automático",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-next-stage",
+      "name": "NeXT-Stage",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/NeXT-Stage",
+      "desc": "Portfólio de time de devs fullstack com Next.js, Tailwind v4 e Framer Motion",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-estoque-app-web",
+      "name": "Estoque-App_Web",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Estoque-App_Web",
+      "desc": "Controlo de estoque multi-loja com conversão automática de moeda - React, Node.js e PostgreSQL",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-listofcontacts",
+      "name": "ListofContacts",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/ListofContacts",
+      "desc": "App full-stack para gerenciamento de contatos - React, TypeScript, Node.js e MongoDB",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-blog-vite",
+      "name": "Blog_vite",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Blog_vite",
+      "desc": "Blog completo com CRUD, autenticação JWT, upload de imagens e painel admin - React + Vite",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-main-portif-lio-",
+      "name": "Main-Portif-lio-",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Main-Portif-lio-",
+      "desc": "Portfólio pessoal responsivo com HTML, CSS e JavaScript",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-mynewportfolio",
+      "name": "MyNewPortfolio",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/MyNewPortfolio",
+      "desc": "Portfólio pessoal atualizado com HTML, CSS e imagens otimizadas",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-link-tree-rocketseat",
+      "name": "link-tree-Rocketseat",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/link-tree-Rocketseat",
+      "desc": "Página de links estilo Link Tree construída com React - projeto da Rocketseat",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-lilreact-vite",
+      "name": "LilReact-Vite",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/LilReact-Vite",
+      "desc": "Template mínimo de projeto React com Vite, HMR e ESLint configurado",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-todo-angular",
+      "name": "Todo_Angular",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Todo_Angular",
+      "desc": "Lista de tarefas moderna com Angular CLI 19 e componentes reutilizáveis",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-todo-angular",
+      "name": "ToDo-Angular",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/ToDo-Angular",
+      "desc": "Lista de tarefas construída com Angular - adicionar, editar e concluir tarefas",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-todo",
+      "name": "ToDo",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/ToDo",
+      "desc": "Lista de tarefas com adicionar, editar, concluir e salvar dados no LocalStorage",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-forms",
+      "name": "forms",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/forms",
+      "desc": "Formulário React com login e cadastro, backend em Node.js e banco MongoDB",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-calculadora-imc-react",
+      "name": "Calculadora_IMC_React",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Calculadora_IMC_React",
+      "desc": "Calculadora de IMC simples e responsiva construída com React",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-landingpage",
+      "name": "Landingpage",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Landingpage",
+      "desc": "Landing page responsiva construída com o curso da OneBitCode",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-4-instagram",
+      "name": "Projeto-4-Instagram",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-4-Instagram",
+      "desc": "Cópia da interface do Instagram - projeto do curso de Front-end do Matheus Battisti",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-2-form",
+      "name": "Projeto-2-form",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-2-form",
+      "desc": "Formulário de cadastro simples e funcional com HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-effectglasswhblur",
+      "name": "EffectGlasswhBlur",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/EffectGlasswhBlur",
+      "desc": "Efeito de vidro fosco (glassmorphism blur) implementado com HTML e CSS puro",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-thefirsttimer",
+      "name": "TheFirstTimer",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/TheFirstTimer",
+      "desc": "Timer/Cronômetro web com botões de iniciar, pausar e parar - JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-teladelogin",
+      "name": "TeladeLogin",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/TeladeLogin",
+      "desc": "Tela de login responsiva com campos de email/senha e opções de lembrete",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-aula-2-docker",
+      "name": "Aula_2_Docker",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Aula_2_Docker",
+      "desc": "API REST com FastAPI para geração de números, moedas e cálculos matemáticos - Docker + Swagger",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-teladeloginderktheme",
+      "name": "TelaDeLoginDerkTheme",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/TelaDeLoginDerkTheme",
+      "desc": "Tela de login com tema escuro (dark mode) inspirada em tutorial YouTube",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-teladelogincomcadastro",
+      "name": "TeladeLoginComCadastro",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/TeladeLoginComCadastro",
+      "desc": "Tela de login completa com cadastro de novos usuários",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-relogio-digital",
+      "name": "Relogio-Digital",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Relogio-Digital",
+      "desc": "Relógio digital estilizado construído com HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-real-watch",
+      "name": "Real-Watch",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Real-Watch",
+      "desc": "App Android que exibe relógio em tempo real com modos preto e branco",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projetos-5-blog",
+      "name": "Projetos-5-Blog",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projetos-5-Blog",
+      "desc": "Mini blog com HTML semântico focado em conteúdo sobre animes",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-tabuada",
+      "name": "Projeto-Tabuada",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-Tabuada",
+      "desc": "Tabuada interativa simples construída com HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-imc",
+      "name": "Projeto-IMC",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-IMC",
+      "desc": "Calculadora de IMC responsiva com HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projeto-3-hdc-host",
+      "name": "Projeto-3-HDC-Host",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projeto-3-HDC-Host",
+      "desc": "Página de hospedagem web estilo landing page de serviços - HTML e CSS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-projects",
+      "name": "Projects",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Projects",
+      "desc": "Coleção dos meus primeiros projetos em frontend com HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-phpexr",
+      "name": "PHPexr",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/PHPexr",
+      "desc": "Projeto de estudos do curso PHP do Gustavo Guanabara - exercícios práticos",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-password-checker",
+      "name": "PassWord-Checker",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/PassWord-Checker",
+      "desc": "Gerador de senhas seguras inspirado no desafio Frontend Mentor",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-nfttrainerchallenge",
+      "name": "NftTrainerChallenge",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/NftTrainerChallenge",
+      "desc": "Desafio de treino NFT construído como experiência de aprendizado",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-netlify-feature-tour",
+      "name": "netlify-feature-tour",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/netlify-feature-tour",
+      "desc": "Site de exemplo para aprendizado das funcionalidades do Netlify",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-login-view-binding",
+      "name": "Login_VIEW-BINDING",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Login_VIEW-BINDING",
+      "desc": "App Android com login/cadastro e exibição de localização GPS via View Binding",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-login",
+      "name": "Login",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Login",
+      "desc": "Tela de login moderna e responsiva construída com Tailwind CSS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-lei-ohm",
+      "name": "Lei_Ohm",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Lei_Ohm",
+      "desc": "Calculadora da Lei de Ohm desenvolvida em Kotlin para estudantes de eletrônica",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-leitor-de-hidr-metros-web",
+      "name": "Leitor-de-hidr-metros-web",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Leitor-de-hidr-metros-web",
+      "desc": "Site Next.js 14 que lê fotos de hidrômetros via OCR e gera planilhas automaticamente",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-landingpage2",
+      "name": "LandingPage2",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/LandingPage2",
+      "desc": "Landing page elegante construída com o tutorial da Rafella Ballerini",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-kotlin-cal",
+      "name": "kotlin_Cal",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/kotlin_Cal",
+      "desc": "Calculadora básica desenvolvida em Kotlin para Android",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-imc-kotlin",
+      "name": "IMC_Kotlin",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/IMC_Kotlin",
+      "desc": "Calculadora de IMC desenvolvida em Kotlin para Android",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-googlecopy",
+      "name": "GoogleCopy",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/GoogleCopy",
+      "desc": "Cópia fiel da interface do Google feita com HTML e CSS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-gerador-de-senhas",
+      "name": "Gerador-de-senhas",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Gerador-de-senhas",
+      "desc": "Gerador de senhas seguras com opções de caracteres, números e símbolos",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-gerador-de-codigo-qr",
+      "name": "Gerador-de-codigo-QR",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Gerador-de-codigo-QR",
+      "desc": "Gerador de QR codes no frontend com HTML, CSS e JavaScript puro",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-geolocation",
+      "name": "geolocation",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/geolocation",
+      "desc": "Edge Function para obter localização do visitante via Vercel Edge Middleware",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-firebase-login",
+      "name": "Firebase_login",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Firebase_login",
+      "desc": "App Android com login seguro usando Firebase Authentication",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-fireauth",
+      "name": "FIREAUTH",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/FIREAUTH",
+      "desc": "App Android com autenticação completa via Firebase Authentication",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-domportifolio-com-br",
+      "name": "domportifolio.com.br",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/domportifolio.com.br",
+      "desc": "Portfólio profissional de Daniel - Designer & Ilustrador com React + TypeScript + Tailwind",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-dev-notes",
+      "name": "Dev-notes",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Dev-notes",
+      "desc": "Aplicativo de notas avançado com CRUD, busca, filtros e exportação CSV",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-conversor-memoria-",
+      "name": "Conversor_Memoria.",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Conversor_Memoria.",
+      "desc": "Conversor dinâmico de unidades de memória (bytes, KB, MB, GB) com JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-conversor-de-unidades",
+      "name": "Conversor-de-unidades",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Conversor-de-unidades",
+      "desc": "Conversor de unidades de medida com interface limpa - HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-consulta-cep",
+      "name": "Consulta_cep",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Consulta_cep",
+      "desc": "Projeto Android em Java para consulta de CEP e exibição de endereço completo",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-card-qr-code",
+      "name": "Card-QR-Code",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Card-QR-Code",
+      "desc": "Desafio Frontend Mentor - Card com QR Code responsivo e acessível",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-box-shadow-generator",
+      "name": "Box-shadow-generator",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Box-shadow-generator",
+      "desc": "Gerador de sombras CSS interativo com configurações de cor, blur, espessura e opacidade",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-app-login",
+      "name": "App_Login",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/App_Login",
+      "desc": "App Android com login, cadastro, senhas criptografadas e geolocalização GPS",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-age-calculater-app",
+      "name": "Age-Calculater-app",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Age-Calculater-app",
+      "desc": "Calculadora de idade que exibe anos, meses e dias a partir da data de nascimento",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-advice-generator-app",
+      "name": "Advice-Generator-app",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Advice-Generator-app",
+      "desc": "Gerador aleatório de conselhos inspirado no desafio Frontend Mentor - HTML, CSS e JavaScript",
+      "isPrivate": false
+    },
+    {
+      "id": "gh-add-films",
+      "name": "Add_Films",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/Add_Films",
+      "desc": "App Android em Java para adicionar e gerenciar filmes pessoais",
+      "isPrivate": true
+    },
+    {
+      "id": "gh-1-portif-lio-",
+      "name": "1-portif-lio-",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/1-portif-lio-",
+      "desc": "Meu primeiro portfólio web construído com HTML e CSS puro",
+      "isPrivate": true
+    },
+    {
+      "id": "gh--crud-room-sqlite",
+      "name": "-CRUD-ROOM-SQLITE",
+      "type": "github",
+      "source": "https://github.com/Henrique1601/-CRUD-ROOM-SQLITE",
+      "desc": "CRUD de perfil com Room e SQLite no Android - persistência local de dados com Kotlin",
+      "isPrivate": true
+    }
+  ]
+}
