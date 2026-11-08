@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { getValidBufferToken } from "@/lib/buffer-auth";
 
-// Canais conhecidos caso a chamada ao MCP remoto falhe
+export const dynamic = "force-dynamic";
+
 const FALLBACK_CHANNELS = [
   {
     id: "6ad937ba778b240e2f820c1e",
@@ -31,13 +31,13 @@ const FALLBACK_CHANNELS = [
 ];
 
 export async function GET() {
-  const token = process.env.BUFFER_ACCESS_TOKEN;
+  const token = await getValidBufferToken();
 
   if (!token) {
     return NextResponse.json({
       connected: false,
       channels: FALLBACK_CHANNELS,
-      message: "BUFFER_ACCESS_TOKEN não configurado no ambiente, exibindo canais em modo fallback."
+      message: "BUFFER_ACCESS_TOKEN não disponível, exibindo canais em fallback."
     });
   }
 

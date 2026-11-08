@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateSmartCopy } from "@/lib/copywriter";
+import { getValidBufferToken } from "@/lib/buffer-auth";
 
 export async function POST(request: Request) {
   try {
@@ -34,10 +35,8 @@ export async function POST(request: Request) {
       scheduledDate = new Date(customTime);
     }
 
-    // 3. Monta o Asset Preview Interativo
-    const assetUrl = assetType === "video"
-      ? "/samples/promocraft-motion.html"
-      : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80";
+    // 3. Monta o Asset Preview Interativo DINÂMICO com o nome e dados do projeto real
+    const previewUrl = `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
 
     const job = {
       id: `job-${Date.now()}`,
@@ -46,8 +45,8 @@ export async function POST(request: Request) {
       style,
       assetType,
       status: "completed",
-      assetUrl,
-      previewUrl: assetUrl,
+      assetUrl: previewUrl,
+      previewUrl: previewUrl,
       headline,
       copy: fullCaption,
       hashtags: copyResult.hashtags,
@@ -58,9 +57,10 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString()
     };
 
-    // 4. Se o usuário marcou autoPostToBuffer e há canais selecionados, dispara para o Buffer
-    const token = process.env.BUFFER_ACCESS_TOKEN;
+    // 4. Se o usuário marcou autoPostToBuffer e há canais selecionados, dispara para o Buffer com token renovado
+    const token = await getValidBufferToken();
     const bufferResults = [];
+    const bufferErrors = [];
 
     if (token && autoPostToBuffer && targetChannels.length > 0) {
       for (const channelId of targetChannels) {
@@ -90,9 +90,11 @@ export async function POST(request: Request) {
           const mcpData = await res.json();
           if (mcpData?.result?.content?.[0]?.text) {
             bufferResults.push(JSON.parse(mcpData.result.content[0].text));
+          } else if (mcpData?.error) {
+            bufferErrors.push(mcpData.error);
           }
-        } catch (e) {
-          console.error("Erro ao criar draft no Buffer para canal:", channelId, e);
+        } catch (e: any) {
+          bufferErrors.push(e.message);
         }
       }
     }
@@ -101,7 +103,10 @@ export async function POST(request: Request) {
       success: true,
       job,
       bufferResults,
-      message: `Asset criado com sucesso! Prévia interativa gerada e agendamento configurado.`
+      bufferErrors,
+      message: bufferResults.length > 0
+        ? `Criado com sucesso e ${bufferResults.length} rascunho(s) enviado(s) ao Buffer!`
+        : `Asset gerado com sucesso! Prévia dinâmica renderizada.`
     });
 
   } catch (error: any) {

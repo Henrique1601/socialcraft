@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { getValidBufferToken } from "@/lib/buffer-auth";
 
 export async function POST(request: Request) {
-  const token = process.env.BUFFER_ACCESS_TOKEN;
+  const token = await getValidBufferToken();
 
   try {
     const body = await request.json();
@@ -16,20 +17,11 @@ export async function POST(request: Request) {
 
     if (!token) {
       return NextResponse.json({
-        success: true,
-        mock: true,
-        message: "Buffer Access Token ausente. Agendamento simulado com sucesso na fila local!",
-        post: {
-          id: `sim-${Date.now()}`,
-          channelId,
-          text,
-          status: saveToDraft ? "draft" : "scheduled",
-          dueAt: dueAt || new Date(Date.now() + 3600000).toISOString()
-        }
-      });
+        success: false,
+        error: "Buffer Token indisponível no momento"
+      }, { status: 401 });
     }
 
-    // Monta os argumentos para o MCP create_post
     const args: any = {
       channelId,
       schedulingType: "automatic",
@@ -42,16 +34,13 @@ export async function POST(request: Request) {
       args.dueAt = dueAt;
     }
 
-    // Se houver asset (imagem/vídeo público)
     if (assetUrl && assetUrl.startsWith("http")) {
       if (assetUrl.endsWith(".mp4") || assetUrl.includes("video")) {
         args.assets = [
           {
             video: {
               url: assetUrl,
-              metadata: {
-                title: "Post gerado pelo SocialCraft"
-              }
+              metadata: { title: "Post gerado pelo SocialCraft" }
             }
           }
         ];
@@ -60,9 +49,7 @@ export async function POST(request: Request) {
           {
             image: {
               url: assetUrl,
-              metadata: {
-                altText: "Visual gerado pelo SocialCraft"
-              }
+              metadata: { altText: "Visual gerado pelo SocialCraft" }
             }
           }
         ];
