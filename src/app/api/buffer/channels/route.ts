@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getValidBufferToken } from "@/lib/buffer-auth";
 
-export const dynamic = "force-dynamic";
-
 const FALLBACK_CHANNELS = [
   {
     id: "6ad937ba778b240e2f820c1e",
