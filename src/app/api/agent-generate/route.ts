@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateSmartCopy } from "@/lib/copywriter";
 import { getValidBufferToken } from "@/lib/buffer-auth";
+import { getProjectAssets } from "@/lib/asset-catalog";
 
 export async function POST(request: Request) {
   try {
@@ -35,8 +36,14 @@ export async function POST(request: Request) {
       scheduledDate = new Date(customTime);
     }
 
-    // 3. Monta o Asset Preview Interativo DINÂMICO com o nome e dados do projeto real
+    // 3. Monta o Asset Preview Interativo DINÂMICO
     const previewUrl = `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
+
+    // 4. Resolve o arquivo binário real para o Buffer (Vídeo MP4 ou Imagem Mockup 3D)
+    const assetBundle = getProjectAssets(projectName, style);
+    const bufferMediaUrl = assetType === "video" 
+      ? assetBundle.videoUrl 
+      : assetBundle.mockup3DUrl;
 
     const job = {
       id: `job-${Date.now()}`,
@@ -45,7 +52,7 @@ export async function POST(request: Request) {
       style,
       assetType,
       status: "completed",
-      assetUrl: previewUrl,
+      assetUrl: bufferMediaUrl,
       previewUrl: previewUrl,
       headline,
       copy: fullCaption,
@@ -57,7 +64,7 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString()
     };
 
-    // 4. Se o usuário marcou autoPostToBuffer e há canais selecionados, dispara para o Buffer com token renovado
+    // 5. Dispara para o Buffer com o payload de assets formatado por rede social
     const token = await getValidBufferToken();
     const bufferResults = [];
     const bufferErrors = [];
@@ -65,6 +72,52 @@ export async function POST(request: Request) {
     if (token && autoPostToBuffer && targetChannels.length > 0) {
       for (const channelId of targetChannels) {
         try {
+          // Prepara payload de assets compatível com Buffer
+          const postArgs: any = {
+            channelId,
+            schedulingType: "automatic",
+            saveToDraft: true,
+            text: `${headline}\n\n${fullCaption}\n\n${copyResult.hashtags.join(" ")}`
+          };
+
+          if (assetType === "video") {
+            postArgs.assets = [
+              {
+                video: {
+                  url: bufferMediaUrl,
+                  metadata: {
+                    title: `Vídeo Motion: ${projectName}`
+                  }
+                }
+              }
+            ];
+            // Configurações específicas por plataforma (Instagram exige type: 'reel')
+            postArgs.metadata = {
+              instagram: {
+                type: "reel",
+                shouldShareToFeed: true
+              }
+            };
+          } else {
+            // Imagem Mockup 3D / Print 4K
+            postArgs.assets = [
+              {
+                image: {
+                  url: bufferMediaUrl,
+                  metadata: {
+                    altText: `Mockup 3D de alta resolução para ${projectName}`
+                  }
+                }
+              }
+            ];
+            postArgs.metadata = {
+              instagram: {
+                type: "post",
+                shouldShareToFeed: true
+              }
+            };
+          }
+
           const res = await fetch("https://mcp.buffer.com/mcp", {
             method: "POST",
             headers: {
@@ -78,18 +131,15 @@ export async function POST(request: Request) {
               method: "tools/call",
               params: {
                 name: "create_post",
-                arguments: {
-                  channelId,
-                  schedulingType: "automatic",
-                  saveToDraft: true,
-                  text: `${headline}\n\n${fullCaption}\n\n${copyResult.hashtags.join(" ")}`
-                }
+                arguments: postArgs
               }
             })
           });
+
           const mcpData = await res.json();
           if (mcpData?.result?.content?.[0]?.text) {
-            bufferResults.push(JSON.parse(mcpData.result.content[0].text));
+            const parsedResult = JSON.parse(mcpData.result.content[0].text);
+            bufferResults.push(parsedResult);
           } else if (mcpData?.error) {
             bufferErrors.push(mcpData.error);
           }
@@ -105,8 +155,8 @@ export async function POST(request: Request) {
       bufferResults,
       bufferErrors,
       message: bufferResults.length > 0
-        ? `Criado com sucesso e ${bufferResults.length} rascunho(s) enviado(s) ao Buffer!`
-        : `Asset gerado com sucesso! Prévia dinâmica renderizada.`
+        ? `Criado e enviado com mídia anexada (Vídeo/Mockup 3D) para ${bufferResults.length} canal(is) no Buffer!`
+        : `Asset gerado com sucesso! Prévia renderizada.`
     });
 
   } catch (error: any) {
