@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { generateSmartCopy } from "@/lib/copywriter";
 import { getValidBufferToken } from "@/lib/buffer-auth";
 import { getProjectAssets } from "@/lib/asset-catalog";
+import { getProjectMotionUrl } from "@/data/real-motions";
 
 export async function POST(request: Request) {
   try {
@@ -13,16 +14,18 @@ export async function POST(request: Request) {
       targetChannels = [],
       schedulePreference = "ai-smart",
       customTime = null,
+      customCopy = null,
+      copyStyle = "technical",
       autoPostToBuffer = true
     } = body;
 
     const projectName = typeof project === "object" ? project.name : (project || "Projeto");
     const projectDesc = typeof project === "object" ? project.desc : "Projeto de tecnologia e inovação";
 
-    // 1. Gera Copywriting Otimizado
-    const copyResult = generateSmartCopy(projectName, "technical");
+    // 1. Gera Copywriting Otimizado (ou usa o customizado se o usuário editou na tela)
+    const copyResult = generateSmartCopy(projectName, copyStyle as any);
     const headline = `🚀 Conheça o ${projectName}: ${projectDesc}`;
-    const fullCaption = `${copyResult.caption}\n\nConfira todos os detalhes no GitHub ou teste agora mesmo!`;
+    const fullCaption = customCopy || `${copyResult.caption}\n\nConfira todos os detalhes no GitHub ou teste agora mesmo!`;
 
     // 2. Determina Horário via IA (pico brasileiro 18h45 ou 12h15)
     let scheduledDate = new Date();
@@ -36,8 +39,11 @@ export async function POST(request: Request) {
       scheduledDate = new Date(customTime);
     }
 
-    // 3. Monta a URL de Prévia Visual Dinâmica
-    const previewUrl = `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
+    // 3. Verifica se o projeto possui um Motion HTML Real construído!
+    const realMotionPath = getProjectMotionUrl(projectName);
+    const previewUrl = realMotionPath 
+      ? realMotionPath 
+      : `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
 
     // 4. Resolve o arquivo binário real para o Buffer (Vídeo MP4 ou Imagem Mockup 3D)
     const assetBundle = getProjectAssets(projectName, style);
@@ -54,6 +60,7 @@ export async function POST(request: Request) {
       status: "completed",
       assetUrl: bufferMediaUrl,
       previewUrl: previewUrl,
+      isRealMotion: !!realMotionPath,
       headline,
       copy: fullCaption,
       hashtags: copyResult.hashtags,
@@ -69,7 +76,6 @@ export async function POST(request: Request) {
     const bufferResults = [];
     const bufferErrors = [];
 
-    // Mapeamento de canal para determinar se é instagram ou linkedin
     const LINKEDIN_CHANNEL_IDS = ["6ad937ba778b240e2f820c1e"];
 
     if (token && autoPostToBuffer && targetChannels.length > 0) {
@@ -95,7 +101,6 @@ export async function POST(request: Request) {
                 }
               }
             ];
-            // Somente Instagram recebe metadata.instagram
             if (!isLinkedIn) {
               postArgs.metadata = {
                 instagram: {
@@ -105,7 +110,6 @@ export async function POST(request: Request) {
               };
             }
           } else {
-            // Imagem Mockup 3D / Print 4K
             postArgs.assets = [
               {
                 image: {
@@ -116,7 +120,6 @@ export async function POST(request: Request) {
                 }
               }
             ];
-            // Somente Instagram recebe metadata.instagram
             if (!isLinkedIn) {
               postArgs.metadata = {
                 instagram: {

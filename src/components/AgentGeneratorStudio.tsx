@@ -21,8 +21,8 @@ import {
   Eye,
   Maximize2,
   RefreshCw,
-  Send,
-  Sliders,
+  Download,
+  Edit3,
   CheckSquare,
   Square
 } from "lucide-react";
@@ -85,11 +85,15 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
   const [customDateTime, setCustomDateTime] = useState("");
   const [autoSyncBuffer, setAutoSyncBuffer] = useState(true);
 
+  // Copiloto de Copywriting
+  const [copyStyle, setCopyStyle] = useState<"technical" | "storytelling" | "direct">("technical");
+  const [customCopyText, setCustomCopyText] = useState("");
+  const [isEditingCopy, setIsEditingCopy] = useState(false);
+
   // Execução e Logs
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeJob, setActiveJob] = useState<any>(null);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
-  const [showFullPreview, setShowFullPreview] = useState(false);
 
   // Carrega os canais reais do Buffer
   useEffect(() => {
@@ -99,7 +103,6 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
         const data = await res.json();
         if (data.channels && data.channels.length > 0) {
           setAvailableChannels(data.channels);
-          // Marca o LinkedIn e o primeiro Instagram por padrão
           setSelectedChannelIds(data.channels.map((c: Channel) => c.id));
         }
       } catch (e) {
@@ -133,23 +136,22 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       selectedAssetType === "screenshot"
         ? `[chrome-devtools-mcp] Capturando telas em 4K Retina e aplicando molduras fotorrealistas 3D...`
         : `[social-publisher-agent] Montando Motion em código (GSAP/CSS3D) com estilo "${selectedStyle}"...`,
-      `[typesafe-ai] Calibrando gancho de copywriting de alta retenção e hashtags de tecnologia...`,
+      `[typesafe-ai] Calibrando gancho de copywriting (${copyStyle.toUpperCase()}) de alta retenção e hashtags...`,
       scheduleMode === "ai-smart"
         ? `[growth-marketing-agent] Analisando pico de engajamento do público brasileiro: 18h45 selecionado!`
         : `[schedule-engine] Horário personalizado fixado para ${customDateTime || "horário escolhido"}`,
       autoSyncBuffer
-        ? `[buffer-mcp] Criando e enviando rascunhos para ${selectedChannelIds.length} canal(is) configurado(s)...`
+        ? `[buffer-mcp] Anexando mídias (Vídeo MP4 / Mockup 3D) e enviando para ${selectedChannelIds.length} canal(is)...`
         : `[local-engine] Asset gerado na esteira interna para aprovação prévia.`,
-      `[socialcraft-core] Concluído com sucesso! Player de prévia e rascunhos liberados.`
+      `[socialcraft-core] Concluído com sucesso! Player de prévia e rascunhos liberados no Buffer.`
     ];
 
     for (let i = 0; i < logsSequence.length; i++) {
-      await new Promise((res) => setTimeout(res, 750));
+      await new Promise((res) => setTimeout(res, 650));
       setGenerationLogs((prev) => [...prev, logsSequence[i]]);
     }
 
     try {
-      // Dispara geração na API com persistência
       const res = await fetch("/api/agent-generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -160,6 +162,8 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
           targetChannels: selectedChannelIds,
           schedulePreference: scheduleMode,
           customTime: customDateTime,
+          customCopy: customCopyText || null,
+          copyStyle,
           autoPostToBuffer: autoSyncBuffer
         })
       });
@@ -167,6 +171,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       const data = await res.json();
       if (data.success && data.job) {
         setActiveJob(data.job);
+        setCustomCopyText(data.job.copy);
         if (onAssetDispatched) {
           onAssetDispatched(data.job);
         }
@@ -183,7 +188,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Coluna Esquerda: Painel de Controle e Parâmetros */}
       <div className="lg:col-span-7 flex flex-col gap-6">
-        <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 sm:p-8 flex flex-col gap-6">
+        <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
@@ -191,7 +196,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
               </div>
               <div>
                 <h2 className="font-extrabold text-white text-lg">Central de Criação com IA</h2>
-                <p className="text-xs text-zinc-400">Escolha projeto, formato, canais e agende no Buffer</p>
+                <p className="text-xs text-zinc-400">Escolha projeto, formato, canais e agende no Buffer com mídias</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -307,7 +312,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   }`}
                 >
                   <Film className="w-4 h-4" />
-                  <span className="text-[11px]">Vídeo</span>
+                  <span className="text-[11px]">Vídeo MP4</span>
                 </button>
                 <button
                   type="button"
@@ -319,7 +324,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   }`}
                 >
                   <Camera className="w-4 h-4" />
-                  <span className="text-[11px]">Print 4K</span>
+                  <span className="text-[11px]">Mockup 3D</span>
                 </button>
                 <button
                   type="button"
@@ -354,7 +359,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             </div>
           </div>
 
-          {/* 4. Canais de Destino (Instagram & LinkedIn do Buffer) */}
+          {/* 4. Canais de Destino (Buffer Real) */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
@@ -367,7 +372,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
 
             {isLoadingChannels ? (
               <div className="flex items-center gap-2 text-xs text-zinc-500 py-3">
-                <Loader2 className="w-4 h-4 animate-spin" /> Carregando seus canais conectados...
+                <Loader2 className="w-4 h-4 animate-spin" /> Carregando canais conectados...
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -413,10 +418,67 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             )}
           </div>
 
-          {/* 5. Escolha de Horário: IA Inteligente vs Personalizado */}
+          {/* 5. Copiloto de Copywriting: Ajuste de Tom & Edição */}
+          <div className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <span>5. Tom de Copywriting por IA</span>
+              </label>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setCopyStyle("technical")}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    copyStyle === "technical" ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
+                >
+                  Técnico
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCopyStyle("storytelling")}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    copyStyle === "storytelling" ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
+                >
+                  Storytelling
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCopyStyle("direct")}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    copyStyle === "direct" ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
+                >
+                  Direto
+                </button>
+              </div>
+            </div>
+
+            {isEditingCopy ? (
+              <textarea
+                value={customCopyText}
+                onChange={(e) => setCustomCopyText(e.target.value)}
+                rows={3}
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl p-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500"
+                placeholder="Personalize a legenda antes de disparar..."
+              />
+            ) : (
+              <div 
+                onClick={() => setIsEditingCopy(true)}
+                className="text-xs text-zinc-400 bg-zinc-900/60 p-2.5 rounded-xl border border-dashed border-zinc-800 hover:border-zinc-700 cursor-pointer flex items-center justify-between"
+              >
+                <span className="truncate">{customCopyText || "Clique para personalizar a legenda do post..."}</span>
+                <Edit3 className="w-3.5 h-3.5 text-zinc-500 shrink-0 ml-2" />
+              </div>
+            )}
+          </div>
+
+          {/* 6. Horário da Postagem: IA vs Personalizado */}
           <div>
             <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block mb-2">
-              5. Horário da Postagem
+              6. Horário da Postagem
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
@@ -432,7 +494,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                 <div>
                   <div className="text-xs font-bold text-white mb-0.5">IA Escolhe Melhor Horário</div>
                   <div className="text-[10px] text-zinc-400">
-                    Otimizado para pico de engajamento no Brasil (18:45 ou 12:15)
+                    Otimizado para pico no Brasil (18:45 ou 12:15)
                   </div>
                 </div>
               </button>
@@ -464,11 +526,11 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             </div>
           </div>
 
-          {/* Opção de Envio Automático ao Buffer */}
+          {/* Disparo Automático ao Buffer */}
           <div className="flex items-center justify-between p-3 bg-zinc-950 rounded-xl border border-zinc-800">
             <div className="flex items-center gap-2">
               <Share2 className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-zinc-300">Criar Rascunho Oficial no Buffer ao Concluir</span>
+              <span className="text-xs text-zinc-300">Anexar Mídia e Criar Rascunho Oficial no Buffer</span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -490,7 +552,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             {isGenerating ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="text-xs sm:text-sm">Agentes Criando & Agendando para {selectedProject?.name}...</span>
+                <span className="text-xs sm:text-sm">Agentes Criando & Anexando no Buffer...</span>
               </>
             ) : (
               <>
@@ -505,7 +567,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       {/* Coluna Direita: Player de Prévia Visual + Terminal HUD */}
       <div className="lg:col-span-5 flex flex-col gap-6">
         {/* Bloco 1: Player de Prévia Visual do Vídeo Gerado */}
-        <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-5 flex flex-col gap-4">
+        <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-5 flex flex-col gap-4 shadow-xl">
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
             <div className="flex items-center gap-2 text-xs font-bold text-white">
               <Eye className="w-4 h-4 text-emerald-400" />
@@ -513,7 +575,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             </div>
             {activeJob && (
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                PRONTO & DISPONÍVEL
+                {activeJob.isRealMotion ? "MOTION 9:16 REAL" : "RENDERIZADO"}
               </span>
             )}
           </div>
@@ -521,15 +583,15 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
           <div className="relative aspect-[9/14] sm:aspect-video w-full bg-black rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center group shadow-2xl">
             {activeJob ? (
               <div className="w-full h-full relative">
-                {activeJob.assetType === "video" ? (
+                {activeJob.previewUrl.endsWith(".html") || activeJob.previewUrl.includes("motion-preview") ? (
                   <iframe
-                    src={activeJob.previewUrl || "/samples/promocraft-motion.html"}
+                    src={activeJob.previewUrl}
                     className="w-full h-full border-0 pointer-events-auto"
                     title="Vídeo Motion Gerado"
                   />
                 ) : (
                   <img
-                    src={activeJob.previewUrl}
+                    src={activeJob.assetUrl}
                     alt="Mockup do Projeto"
                     className="w-full h-full object-cover"
                   />
@@ -544,6 +606,16 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   >
                     <Maximize2 className="w-4 h-4" />
                   </a>
+                  <a
+                    href={activeJob.assetUrl}
+                    download={`socialcraft-${activeJob.project}.mp4`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-cyan-500 hover:bg-cyan-400 text-black p-2 rounded-xl font-bold backdrop-blur-md transition-all flex items-center gap-1 text-xs"
+                    title="Baixar Arquivo"
+                  >
+                    <Download className="w-4 h-4" />
+                  </a>
                 </div>
               </div>
             ) : (
@@ -551,7 +623,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                 <Film className="w-12 h-12 mb-3 opacity-30 text-zinc-500" />
                 <p className="text-xs font-semibold text-zinc-400">Nenhum asset renderizado ainda</p>
                 <p className="text-[11px] text-zinc-600 mt-1 max-w-xs">
-                  Quando os agentes finalizarem a criação, o player interativo tocará o seu vídeo aqui em tempo real.
+                  Quando os agentes finalizarem, o player interativo tocará a animação 9:16 ou o mockup 3D aqui.
                 </p>
               </div>
             )}
@@ -561,9 +633,9 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
           {activeJob && (
             <div className="bg-zinc-950/90 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-zinc-400 font-mono text-[10px]">STATUS DO BUFFER:</span>
+                <span className="text-zinc-400 font-mono text-[10px]">BUFFER STATUS:</span>
                 <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Sincronizado no Buffer
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Sincronizado com Mídia
                 </span>
               </div>
               <div className="text-[11px] text-zinc-300">
@@ -580,7 +652,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
         </div>
 
         {/* Bloco 2: Terminal HUD dos Agentes */}
-        <div className="flex flex-col bg-zinc-950 border border-zinc-800 rounded-3xl p-5 min-h-[260px] justify-between font-mono">
+        <div className="flex flex-col bg-zinc-950 border border-zinc-800 rounded-3xl p-5 min-h-[220px] justify-between font-mono">
           <div>
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2 mb-3 text-xs text-zinc-400">
               <span className="flex items-center gap-2">
@@ -592,7 +664,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
 
             <div className="flex flex-col gap-2 text-[11px]">
               {generationLogs.length === 0 ? (
-                <div className="text-zinc-600 text-center py-8">
+                <div className="text-zinc-600 text-center py-6">
                   <Bot className="w-8 h-8 mb-2 mx-auto opacity-30 text-zinc-500" />
                   <p>Pronto para executar ordem de criação.</p>
                 </div>

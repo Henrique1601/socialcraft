@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>HackerCraft - Story Launch</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      width: 1080px; height: 1920px; background-color: #080305; color: #FFFFFF;
+      font-family: 'JetBrains Mono', monospace; overflow: hidden; position: relative; margin: 0 auto;
+    }
+    .story-progress-container {
+      position: absolute; top: 24px; left: 40px; right: 40px; height: 4px;
+      background: rgba(239, 68, 68, 0.2); border-radius: 2px; z-index: 1000; overflow: hidden;
+    }
+    .story-progress-bar {
+      height: 100%; width: 0%; background: #ef4444; border-radius: 2px;
+      box-shadow: 0 0 12px #ef4444;
+    }
+    .hud-header {
+      position: absolute; top: 60px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
+      font-size: 20px; color: #f87171; border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+      padding-bottom: 24px;
+    }
+    .hud-tag {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(239, 68, 68, 0.12); border: 1px solid #ef4444;
+      padding: 8px 18px; border-radius: 4px; color: #ef4444; font-weight: 700; font-size: 18px;
+    }
+    .hud-tag::before {
+      content: ''; width: 10px; height: 10px; background: #ef4444; border-radius: 50%;
+      box-shadow: 0 0 12px #ef4444;
+    }
+    .scene {
+      position: absolute; inset: 0; padding: 160px 60px 100px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      z-index: 10; opacity: 0; visibility: hidden;
+    }
+    .headline-wrap { margin-top: 40px; }
+    .headline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 64px; font-weight: 900; line-height: 1.15; letter-spacing: -0.03em;
+      color: #FFFFFF; margin-bottom: 24px;
+    }
+    .word {
+      display: inline-block; opacity: 0; transform: translateY(30px);
+      filter: blur(10px); margin-right: 0.28em;
+    }
+    .subtext { font-size: 24px; color: #fca5a5; line-height: 1.45; max-width: 900px; }
+    .terminal-box {
+      background: #0f0508; border: 1px solid #ef4444; border-radius: 14px;
+      padding: 32px; box-shadow: 0 0 45px rgba(239, 68, 68, 0.15); opacity: 0; transform: translateY(50px);
+    }
+    .footer-watermark {
+      position: absolute; bottom: 50px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 18px; color: #991b1b; z-index: 100;
+      border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="story-progress-container"><div class="story-progress-bar" id="progressBar"></div></div>
+  <div class="hud-header">
+    <div class="hud-tag">HACKERCRAFT // RED TEAM LAB</div>
+    <div id="timer-display">00:00:00 / 00:30:00</div>
+  </div>
+
+  <!-- CENA 0: ABERTURA -->
+  <div class="scene" id="scene0" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div id="openLogo" style="font-family: 'Plus Jakarta Sans'; font-size: 100px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 20px;">
+        HACKER<span style="background: #ef4444; color: #000; padding: 2px 20px; border-radius: 16px;">CRAFT</span>
+      </div>
+      <div id="openSub" style="font-size: 22px; color: #f87171; letter-spacing: 0.25em;">
+        CYBERSECURITY & EXPLOIT ANALYSIS LAB
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 1: DESAFIOS PRÁTICOS DE SEGURANÇA -->
+  <div class="scene" id="scene1">
+    <div class="headline-wrap">
+      <div class="headline" id="hl1">Laboratórios de segurança ofensiva e defesa de aplicações.</div>
+      <div class="subtext">Aprenda a encontrar brechas no OWASP Top 10 atacando ambientes isolados criados para treinamento real.</div>
+    </div>
+    <div class="terminal-box" id="ui1">
+      <div style="color: #ef4444; margin-bottom: 12px; font-size: 18px;">[MISSION 04: SQL INJECTION & AUTH BYPASS]</div>
+      <div style="font-size: 19px; line-height: 1.6; color: #cbd5e1;">
+        TARGET: /api/v1/auth/login<br>
+        PAYLOAD: ' OR '1'='1' --<br>
+        <span style="color: #4ade80;">[VULNERABILITY DETECTED]: Falha crítica no parsing de parâmetros.</span><br>
+        <span style="color: #ef4444;">[DEFENSE]: Aplicando parametrização estrita no driver SQL.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 2: RED TEAMING & DEFESA -->
+  <div class="scene" id="scene2">
+    <div class="headline-wrap">
+      <div class="headline" id="hl2">Auditoria automatizada e análise estática de vulnerabilidades.</div>
+      <div class="subtext">Simulações de invasão controladas para garantir que nenhum segredo ou token vaze para produção.</div>
+    </div>
+    <div class="terminal-box" id="ui2">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span style="color: #f87171; font-weight: 700; font-size: 18px;">SCAN DE SEGURANÇA CI/CD</span>
+        <span style="background: #ef4444; color: #000; font-size: 14px; font-weight: 800; padding: 4px 12px; border-radius: 4px;">HIGH SEVERITY</span>
+      </div>
+      <div style="font-size: 19px; line-height: 1.6; color: #e2e8f0;">
+        ✓ Zero tokens expostos no histórico Git.<br>
+        ✓ Headers de proteção contra XSS e CSRF validados.<br>
+        <span style="color: #4ade80;">✔ Sistema blindado com nota A+ em conformidade OWASP.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 3: FRASE DE IMPACTO -->
+  <div class="scene" id="scene3" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div class="headline" id="hl3" style="font-size: 80px; line-height: 1.15; max-width: 960px; margin: 0 auto;">
+        A melhor forma de defender um sistema é sabendo como ele pode ser atacado.
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 4: ENCERRAMENTO -->
+  <div class="scene" id="scene4">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 100px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 24px;">
+        HACKER<span style="background: #ef4444; color: #000; padding: 2px 20px; border-radius: 16px;">CRAFT</span>
+      </div>
+      <div style="font-size: 30px; color: #fecaca; max-width: 860px; line-height: 1.4; margin-bottom: 60px;">
+        A arena definitiva para dominar segurança de aplicações modernas na prática.
+      </div>
+      <div style="background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; padding: 18px 44px; border-radius: 8px; font-size: 22px; color: #ef4444;">
+        ACESSE // HACKERCRAFT.DEV
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-watermark">
+    <div>HB COMPANY &bull; 2026</div>
+    <div>HACKERCRAFT SECURITY</div>
+  </div>
+
+  <script>
+    function wrapWords(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const text = el.innerText.trim();
+      const words = text.split(/\s+/);
+      el.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+    }
+    wrapWords('#hl1');
+    wrapWords('#hl2');
+    wrapWords('#hl3');
+
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // 00 - 05s: CENA 0
+    tl.set('#scene0', { autoAlpha: 1 })
+      .fromTo('#openLogo', { scale: 0.85, filter: 'blur(16px)', autoAlpha: 0 }, { scale: 1, filter: 'blur(0px)', autoAlpha: 1, duration: 1.2, ease: 'power4.out' })
+      .fromTo('#openSub', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene0', { autoAlpha: 0, scale: 1.1, filter: 'blur(14px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    // 05 - 13s: CENA 1
+    tl.set('#scene1', { autoAlpha: 1 })
+      .to('#hl1 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui1', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene1', { autoAlpha: 0, x: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 13 - 21s: CENA 2
+    tl.set('#scene2', { autoAlpha: 1 })
+      .to('#hl2 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui2', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene2', { autoAlpha: 0, scale: 0.94, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 21 - 25s: CENA 3
+    tl.set('#scene3', { autoAlpha: 1 })
+      .to('#hl3 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#scene3', { autoAlpha: 0, filter: 'blur(20px)', scale: 1.15, duration: 0.8, ease: 'power2.in' }, '+=1.6');
+
+    // 25 - 30s: CENA 4
+    tl.set('#scene4', { autoAlpha: 1 })
+      .fromTo('#scene4 > div', { scale: 1.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'expo.out' })
+      .to('#scene4', { autoAlpha: 0, filter: 'blur(25px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    gsap.to('#progressBar', { width: '100%', duration: 30, ease: 'none', repeat: -1 });
+
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000) % 30;
+      const secs = Math.floor(elapsed).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `00:${secs}:${ms} / 00:30:00`;
+    }, 40);
+  </script>
+</body>
+</html>

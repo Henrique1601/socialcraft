@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>DevSync - Story Launch</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      width: 1080px; height: 1920px; background-color: #050807; color: #FFFFFF;
+      font-family: 'JetBrains Mono', monospace; overflow: hidden; position: relative; margin: 0 auto;
+    }
+    .story-progress-container {
+      position: absolute; top: 24px; left: 40px; right: 40px; height: 4px;
+      background: rgba(16, 185, 129, 0.2); border-radius: 2px; z-index: 1000; overflow: hidden;
+    }
+    .story-progress-bar {
+      height: 100%; width: 0%; background: #10b981; border-radius: 2px;
+      box-shadow: 0 0 12px #10b981;
+    }
+    .hud-header {
+      position: absolute; top: 60px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
+      font-size: 20px; color: #10b981; border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+      padding-bottom: 24px;
+    }
+    .hud-tag {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981;
+      padding: 8px 18px; border-radius: 4px; color: #10b981; font-weight: 700; font-size: 18px;
+    }
+    .grid-lines {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none;
+    }
+    .scene {
+      position: absolute; inset: 0; padding: 160px 60px 100px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      z-index: 10; opacity: 0; visibility: hidden;
+    }
+    .headline-wrap { margin-top: 40px; }
+    .headline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 64px; font-weight: 900; line-height: 1.15; letter-spacing: -0.03em;
+      color: #FFFFFF; margin-bottom: 24px;
+    }
+    .word {
+      display: inline-block; opacity: 0; transform: translateY(30px);
+      filter: blur(10px); margin-right: 0.28em;
+    }
+    .subtext { font-size: 24px; color: #6ee7b7; line-height: 1.45; max-width: 900px; }
+    .terminal-window {
+      background: #020403; border: 1px solid #10b981; border-radius: 12px;
+      box-shadow: 0 0 50px rgba(16, 185, 129, 0.15); overflow: hidden;
+      opacity: 0; transform: translateY(50px);
+    }
+    .term-header {
+      background: #0a110d; padding: 16px 24px; display: flex; align-items: center;
+      gap: 10px; border-bottom: 1px solid rgba(16, 185, 129, 0.2); font-size: 16px; color: #10b981;
+    }
+    .term-body { padding: 32px; font-size: 20px; line-height: 1.7; color: #e2e8f0; }
+    .footer-watermark {
+      position: absolute; bottom: 50px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 18px; color: #047857; z-index: 100;
+      border-top: 1px solid rgba(16, 185, 129, 0.15); padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="story-progress-container"><div class="story-progress-bar" id="progressBar"></div></div>
+  <div class="grid-lines"></div>
+  <div class="hud-header">
+    <div class="hud-tag">$ devsync --daemon active</div>
+    <div id="timer-display">00:00:00 / 00:30:00</div>
+  </div>
+
+  <!-- CENA 0: ABERTURA -->
+  <div class="scene" id="scene0" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div id="openLogo" style="font-family: 'Plus Jakarta Sans'; font-size: 110px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 20px;">
+        DEV<span style="color: #10b981;">SYNC</span>
+      </div>
+      <div id="openSub" style="font-size: 22px; color: #10b981; letter-spacing: 0.25em;">
+        P2P GIT SYNC & CONFLICT RESOLVER
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 1: ZERO CONFLITOS -->
+  <div class="scene" id="scene1">
+    <div class="headline-wrap">
+      <div class="headline" id="hl1">Sincronização P2P contínua entre computadores.</div>
+      <div class="subtext">Esqueça pendrives, commits quebrados ou branches desatualizadas ao alternar do notebook para o desktop.</div>
+    </div>
+    <div class="terminal-window" id="ui1">
+      <div class="term-header">Terminal &bull; devsync-daemon</div>
+      <div class="term-body">
+        <span style="color: #10b981;">❯</span> devsync sync --auto<br>
+        [OK] Peer descoberto na rede local (192.168.1.14:7890)<br>
+        [OK] 14 arquivos sincronizados em 42ms via delta-hash<br>
+        <span style="color: #34d399;">✔ Zero conflitos pendentes. Worktree 100% íntegra.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 2: RESOLUÇÃO POR IA -->
+  <div class="scene" id="scene2">
+    <div class="headline-wrap">
+      <div class="headline" id="hl2">Previsão e resolução inteligente de conflitos no Git.</div>
+      <div class="subtext">O DevSync prevê conflitos de merge antes mesmo de você abrir o Pull Request e sugere a mesclagem exata.</div>
+    </div>
+    <div class="terminal-window" id="ui2">
+      <div class="term-header">devsync predict-conflicts</div>
+      <div class="term-body">
+        <span style="color: #facc15;">[WARN] Potencial conflito detectado em src/services/auth.ts (linhas 42-68)</span><br>
+        <span style="color: #10b981;">❯</span> devsync ai-resolve --strategy semantic<br>
+        [RESOLVED] Mesclagem sintática preservando tipagens de ambos os branches.<br>
+        <span style="color: #34d399;">✔ Conflito resolvido sem intervenção manual.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 3: FRASE DE IMPACTO -->
+  <div class="scene" id="scene3" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div class="headline" id="hl3" style="font-size: 80px; line-height: 1.15; max-width: 960px; margin: 0 auto;">
+        Trabalhe em vários PCs como se fossem uma só máquina.
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 4: ENCERRAMENTO -->
+  <div class="scene" id="scene4">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 110px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 24px;">
+        DEV<span style="color: #10b981;">SYNC</span>
+      </div>
+      <div style="font-size: 30px; color: #a7f3d0; max-width: 860px; line-height: 1.4; margin-bottom: 60px;">
+        Sincronização em tempo real de código para desenvolvedores de alta performance.
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; padding: 18px 44px; border-radius: 8px; font-size: 22px; color: #10b981;">
+        GITHUB // OPEN SOURCE TOOL
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-watermark">
+    <div>HB COMPANY &bull; 2026</div>
+    <div>DEVSYNC ENGINE</div>
+  </div>
+
+  <script>
+    function wrapWords(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const text = el.innerText.trim();
+      const words = text.split(/\s+/);
+      el.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+    }
+    wrapWords('#hl1');
+    wrapWords('#hl2');
+    wrapWords('#hl3');
+
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // 00 - 05s: CENA 0
+    tl.set('#scene0', { autoAlpha: 1 })
+      .fromTo('#openLogo', { scale: 0.85, filter: 'blur(16px)', autoAlpha: 0 }, { scale: 1, filter: 'blur(0px)', autoAlpha: 1, duration: 1.2, ease: 'power4.out' })
+      .fromTo('#openSub', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene0', { autoAlpha: 0, scale: 1.1, filter: 'blur(14px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    // 05 - 13s: CENA 1
+    tl.set('#scene1', { autoAlpha: 1 })
+      .to('#hl1 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui1', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene1', { autoAlpha: 0, x: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 13 - 21s: CENA 2
+    tl.set('#scene2', { autoAlpha: 1 })
+      .to('#hl2 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui2', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene2', { autoAlpha: 0, scale: 0.94, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 21 - 25s: CENA 3
+    tl.set('#scene3', { autoAlpha: 1 })
+      .to('#hl3 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#scene3', { autoAlpha: 0, filter: 'blur(20px)', scale: 1.15, duration: 0.8, ease: 'power2.in' }, '+=1.6');
+
+    // 25 - 30s: CENA 4
+    tl.set('#scene4', { autoAlpha: 1 })
+      .fromTo('#scene4 > div', { scale: 1.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'expo.out' })
+      .to('#scene4', { autoAlpha: 0, filter: 'blur(25px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    gsap.to('#progressBar', { width: '100%', duration: 30, ease: 'none', repeat: -1 });
+
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000) % 30;
+      const secs = Math.floor(elapsed).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `00:${secs}:${ms} / 00:30:00`;
+    }, 40);
+  </script>
+</body>
+</html>

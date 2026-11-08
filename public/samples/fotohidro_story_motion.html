@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>FotoHidro PWA - Story Launch</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      width: 1080px; height: 1920px;
+      background: radial-gradient(circle at 50% 20%, #062b28 0%, #031514 60%, #010807 100%);
+      color: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden; position: relative; margin: 0 auto;
+    }
+    .story-progress-container {
+      position: absolute; top: 24px; left: 40px; right: 40px; height: 4px;
+      background: rgba(20, 184, 166, 0.2); border-radius: 2px; z-index: 1000; overflow: hidden;
+    }
+    .story-progress-bar {
+      height: 100%; width: 0%; background: #14b8a6; border-radius: 2px;
+      box-shadow: 0 0 12px #14b8a6;
+    }
+    .hud-header {
+      position: absolute; top: 60px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
+      font-family: 'JetBrains Mono', monospace; font-size: 20px; color: #5eead4;
+      border-bottom: 1px solid rgba(20, 184, 166, 0.2); padding-bottom: 24px;
+    }
+    .hud-tag {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(20, 184, 166, 0.12); border: 1px solid #14b8a6;
+      padding: 8px 18px; border-radius: 999px; color: #5eead4; font-weight: 700; font-size: 18px;
+    }
+    .hud-tag::before {
+      content: ''; width: 10px; height: 10px; background: #14b8a6; border-radius: 50%;
+      box-shadow: 0 0 12px #14b8a6;
+    }
+    .scene {
+      position: absolute; inset: 0; padding: 160px 60px 100px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      z-index: 10; opacity: 0; visibility: hidden;
+    }
+    .headline-wrap { margin-top: 40px; }
+    .headline {
+      font-size: 64px; font-weight: 900; line-height: 1.15; letter-spacing: -0.03em;
+      color: #FFFFFF; margin-bottom: 24px;
+    }
+    .word {
+      display: inline-block; opacity: 0; transform: translateY(30px);
+      filter: blur(10px); margin-right: 0.28em;
+    }
+    .subtext { font-size: 26px; color: #99f6e4; line-height: 1.45; max-width: 900px; }
+    .mobile-card {
+      background: rgba(4, 47, 46, 0.7); backdrop-filter: blur(20px);
+      border: 1px solid rgba(20, 184, 166, 0.3); border-radius: 28px;
+      padding: 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(20, 184, 166, 0.1);
+      opacity: 0; transform: translateY(50px);
+    }
+    .footer-watermark {
+      position: absolute; bottom: 50px; left: 60px; right: 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #115e59; z-index: 100;
+      border-top: 1px solid rgba(20, 184, 166, 0.2); padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="story-progress-container"><div class="story-progress-bar" id="progressBar"></div></div>
+  <div class="hud-header">
+    <div class="hud-tag">FOTOHIDRO PWA // 100% OFFLINE</div>
+    <div id="timer-display">00:00:00 / 00:30:00</div>
+  </div>
+
+  <!-- CENA 0: ABERTURA -->
+  <div class="scene" id="scene0" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div id="openLogo" style="font-size: 100px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 20px;">
+        FOTO<span style="background: #14b8a6; color: #000; padding: 2px 20px; border-radius: 18px;">HIDRO</span>
+      </div>
+      <div id="openSub" style="font-family: 'JetBrains Mono'; font-size: 22px; color: #5eead4; letter-spacing: 0.2em;">
+        PWA MOBILE-FIRST PARA VISTORIA PREDIAL
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 1: 100% OFFLINE EM SUBSOLOS -->
+  <div class="scene" id="scene1">
+    <div class="headline-wrap">
+      <div class="headline" id="hl1">Funciona 100% offline até nos subsolos sem sinal.</div>
+      <div class="subtext">Desenvolvido como PWA de alta resiliência com IndexedDB. Colete centenas de fotos sem depender de Wi-Fi ou 4G.</div>
+    </div>
+    <div class="mobile-card" id="ui1">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <span style="font-weight: 800; font-size: 22px;">Modo Subsolo Ativo</span>
+        <span style="background: #14b8a6; color: #000; font-family: 'JetBrains Mono'; font-weight: 800; font-size: 14px; padding: 4px 12px; border-radius: 999px;">OFFLINE READY</span>
+      </div>
+      <div style="font-size: 18px; color: #ccfbf1; line-height: 1.6;">
+        ✓ Câmera nativa de alta resolução integrada.<br>
+        ✓ Persistência local criptografada no IndexedDB.<br>
+        ✓ Cache total dos blocos e salas de condomínios.
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 2: NOMENCLATURA AUTOMÁTICA -->
+  <div class="scene" id="scene2">
+    <div class="headline-wrap">
+      <div class="headline" id="hl2">Download em ZIP organizado e nomeado por sala.</div>
+      <div class="subtext">Diga adeus ao trabalho manual de renomear imagens. O app gera os arquivos com nome do condomínio, bloco e medidor.</div>
+    </div>
+    <div class="mobile-card" id="ui2">
+      <div style="font-family: 'JetBrains Mono'; font-size: 16px; color: #5eead4; margin-bottom: 12px;">EXPORTAÇÃO ESTRUTURADA EM 1 CLIQUE</div>
+      <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 14px; font-family: 'JetBrains Mono'; font-size: 17px; line-height: 1.6;">
+        📁 LUXOR_LEITURA_2026.zip<br>
+        &nbsp;&nbsp;📄 Sala_101_Medidor_A492.jpg<br>
+        &nbsp;&nbsp;📄 Sala_102_Medidor_B118.jpg<br>
+        &nbsp;&nbsp;📄 Sala_103_Medidor_C304.jpg
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 3: FRASE DE IMPACTO -->
+  <div class="scene" id="scene3" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div class="headline" id="hl3" style="font-size: 76px; line-height: 1.15; max-width: 960px; margin: 0 auto;">
+        Economize 15 horas de trabalho operacional em cada medição predial.
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 4: ENCERRAMENTO -->
+  <div class="scene" id="scene4">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+      <div style="font-size: 100px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 24px;">
+        FOTO<span style="background: #14b8a6; color: #000; padding: 2px 20px; border-radius: 18px;">HIDRO</span>
+      </div>
+      <div style="font-size: 30px; color: #ccfbf1; max-width: 860px; line-height: 1.4; margin-bottom: 60px;">
+        A solução definitiva em captura de medições fotográficas offline.
+      </div>
+      <div style="background: rgba(20, 184, 166, 0.12); border: 2px solid #14b8a6; padding: 18px 44px; border-radius: 999px; font-family: 'JetBrains Mono'; font-size: 22px; color: #5eead4;">
+        DISPONÍVEL COMO PWA INSTALÁVEL
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-watermark">
+    <div>HB COMPANY &bull; 2026</div>
+    <div>FOTOHIDRO PWA</div>
+  </div>
+
+  <script>
+    function wrapWords(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const text = el.innerText.trim();
+      const words = text.split(/\s+/);
+      el.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+    }
+    wrapWords('#hl1');
+    wrapWords('#hl2');
+    wrapWords('#hl3');
+
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // 00 - 05s: CENA 0
+    tl.set('#scene0', { autoAlpha: 1 })
+      .fromTo('#openLogo', { scale: 0.85, filter: 'blur(16px)', autoAlpha: 0 }, { scale: 1, filter: 'blur(0px)', autoAlpha: 1, duration: 1.2, ease: 'power4.out' })
+      .fromTo('#openSub', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene0', { autoAlpha: 0, scale: 1.1, filter: 'blur(14px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    // 05 - 13s: CENA 1
+    tl.set('#scene1', { autoAlpha: 1 })
+      .to('#hl1 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui1', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene1', { autoAlpha: 0, x: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 13 - 21s: CENA 2
+    tl.set('#scene2', { autoAlpha: 1 })
+      .to('#hl2 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui2', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene2', { autoAlpha: 0, scale: 0.94, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=3.5');
+
+    // 21 - 25s: CENA 3
+    tl.set('#scene3', { autoAlpha: 1 })
+      .to('#hl3 .word', { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#scene3', { autoAlpha: 0, filter: 'blur(20px)', scale: 1.15, duration: 0.8, ease: 'power2.in' }, '+=1.6');
+
+    // 25 - 30s: CENA 4
+    tl.set('#scene4', { autoAlpha: 1 })
+      .fromTo('#scene4 > div', { scale: 1.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'expo.out' })
+      .to('#scene4', { autoAlpha: 0, filter: 'blur(25px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    gsap.to('#progressBar', { width: '100%', duration: 30, ease: 'none', repeat: -1 });
+
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000) % 30;
+      const secs = Math.floor(elapsed).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `00:${secs}:${ms} / 00:30:00`;
+    }, 40);
+  </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>Prospector CRM — Story Motion 30s</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      width: 1080px; height: 1920px;
+      background-color: #000000; color: #ffffff;
+      font-family: 'Inter', -apple-system, sans-serif;
+      overflow: hidden; position: relative;
+    }
+    #stage { position: relative; width: 1080px; height: 1920px; background: #000000; overflow: hidden; }
+    .film-grain {
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none; z-index: 900;
+    }
+    .grid-lines {
+      position: absolute; inset: 0; background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none; z-index: 1;
+    }
+    .hud-top {
+      position: absolute; top: 140px; left: 80px; right: 80px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255, 255, 255, 0.4); z-index: 950;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 18px;
+    }
+    .hud-badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px; color: #fff;
+    }
+    .hud-dot {
+      width: 6px; height: 6px; background: #fff; border-radius: 50%;
+      box-shadow: 0 0 10px #fff; animation: pulseDot 1s infinite alternate;
+    }
+    @keyframes pulseDot { from { opacity: 0.3; } to { opacity: 1; } }
+    .scene {
+      position: absolute; inset: 0; width: 1080px; height: 1920px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; will-change: transform, opacity, filter;
+    }
+    .headline-container { max-width: 920px; text-align: left; z-index: 10; position: absolute; top: 240px; left: 80px; }
+    .headline {
+      font-size: 58px; font-weight: 900; line-height: 1.1; letter-spacing: -1.5px;
+      text-transform: uppercase; color: #ffffff; display: flex; flex-wrap: wrap; gap: 14px 18px;
+    }
+    .headline .word { display: inline-block; overflow: hidden; opacity: 0; transform: translateY(50px) rotateX(-45deg); filter: blur(10px); }
+    .headline-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700;
+      letter-spacing: 4px; color: rgba(255, 255, 255, 0.5); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .headline-tag::before { content: '//'; color: #ffffff; }
+
+    /* Minimalist B&W UI Containers */
+    .ui-wrapper {
+      position: absolute; z-index: 5;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(24px);
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
+      border-radius: 14px; overflow: hidden;
+      opacity: 0; transform: scale(0.92) translateY(50px);
+      width: 920px; left: 80px;
+    }
+    .ui-topbar {
+      height: 44px; background: rgba(20, 20, 20, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 1px; color: rgba(255, 255, 255, 0.5);
+    }
+    .ui-dots { display: flex; gap: 7px; }
+    .ui-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+
+    .logo-hero-text {
+      font-size: 72px; font-weight: 900; letter-spacing: -2px;
+      text-transform: uppercase; color: #ffffff; text-align: center;
+    }
+    .timeline-bar {
+      position: absolute; bottom: 0; left: 0; height: 4px;
+      background: #ffffff; width: 0%; z-index: 999; box-shadow: 0 0 15px #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div class="film-grain"></div>
+    <div class="grid-lines"></div>
+
+    <div class="hud-top">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="hud-badge"><span class="hud-dot"></span> PROSPECTOR CORE</span>
+        <span>B2B CRM // PIPELINE v1.2</span>
+      </div>
+      <div><span id="timer-display">00:00:00</span></div>
+    </div>
+
+    <div class="timeline-bar" id="progressBar"></div>
+
+    <!-- CENA 0: ABERTURA -->
+    <div class="scene" id="scene0">
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="width:120px; height:120px; border:2px solid #fff; border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:48px; font-weight:900;" id="logoIntro">
+          PR
+        </div>
+        <div class="logo-hero-text" style="margin-top:24px;">PROSPECTOR</div>
+        <div style="font-family:'JetBrains Mono', monospace; font-size:14px; letter-spacing:8px; opacity:0.6; margin-top:12px;">
+          B2B SALES INTELLIGENCE
+        </div>
+      </div>
+    </div>
+
+    <!-- CENA 1: FRASE 1 -> Planilhas não fecham vendas de alto ticket. -->
+    <div class="scene" id="scene1">
+      <div class="headline-container">
+        <div class="headline-tag">01 / PROBLEM STATEMENT</div>
+        <div class="headline" id="hl1"></div>
+      </div>
+      <div class="ui-wrapper" id="ui1" style="height:620px; bottom:260px; padding:24px;">
+        <div class="ui-topbar">
+          <div class="ui-dots"><div class="ui-dot"></div><div class="ui-dot"></div><div class="ui-dot"></div></div>
+          <div>LEADS_ENGINE // 291 ACTIVE LEADS</div>
+          <div>REAL-TIME PIPELINE</div>
+        </div>
+        <div style="margin-top:16px;">
+          <div style="display:flex; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.06); font-family:'JetBrains Mono', monospace;">
+            <div><span style="background:#fff; color:#000; font-weight:900; padding:2px 8px; border-radius:4px; margin-right:12px;">QUALIFICADO</span><strong>Logística Santos Brasil</strong></div>
+            <div style="font-weight:700;">R$ 145.000</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.06); font-family:'JetBrains Mono', monospace;">
+            <div><span style="background:#fff; color:#000; font-weight:900; padding:2px 8px; border-radius:4px; margin-right:12px;">PROPOSTA</span><strong>TechTrade Marítima</strong></div>
+            <div style="font-weight:700;">R$ 88.000</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:16px 20px; font-family:'JetBrains Mono', monospace;">
+            <div><span style="background:rgba(255,255,255,0.2); color:#fff; font-weight:700; padding:2px 8px; border-radius:4px; margin-right:12px;">CONTATO HOJE</span><strong>Grupo Delta Shipping</strong></div>
+            <div style="font-weight:700;">R$ 210.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENA 2: FRASE 2 -> Funil visual em Kanban para velocidade comercial. -->
+    <div class="scene" id="scene2">
+      <div class="headline-container">
+        <div class="headline-tag">02 / VISUAL PIPELINE</div>
+        <div class="headline" id="hl2"></div>
+      </div>
+      <div class="ui-wrapper" id="ui2" style="height:620px; bottom:260px; padding:24px;">
+        <div class="ui-topbar">
+          <div class="ui-dots"><div class="ui-dot"></div><div class="ui-dot"></div><div class="ui-dot"></div></div>
+          <div>KANBAN_BOARD // FLUID DRAG & DROP</div>
+          <div>STAGE SYNCHRONIZED</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:16px;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:12px;">PROSPECÇÃO (18)</div>
+            <div style="background:rgba(255,255,255,0.06); padding:12px; border-radius:6px; margin-bottom:8px; font-weight:700; font-size:14px;">Terminal Exportador S/A</div>
+            <div style="background:rgba(255,255,255,0.06); padding:12px; border-radius:6px; font-weight:700; font-size:14px;">Comércio Exterior Alfa</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:16px;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:12px;">FECHAMENTO (6)</div>
+            <div style="background:#fff; color:#000; padding:12px; border-radius:6px; margin-bottom:8px; font-weight:900; font-size:14px;">Mega Port Logística</div>
+            <div style="background:rgba(255,255,255,0.06); padding:12px; border-radius:6px; font-weight:700; font-size:14px;">Atlas Operações B2B</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENA 3: FRASE 3 -> Priorização diária para não deixar leads esfriarem. -->
+    <div class="scene" id="scene3">
+      <div class="headline-container">
+        <div class="headline-tag">03 / DAILY EXECUTION</div>
+        <div class="headline" id="hl3"></div>
+      </div>
+      <div class="ui-wrapper" id="ui3" style="height:620px; bottom:260px; padding:24px;">
+        <div class="ui-topbar">
+          <div class="ui-dots"><div class="ui-dot"></div><div class="ui-dot"></div><div class="ui-dot"></div></div>
+          <div>FOLLOW_UP_RADAR // TODAY'S FOCUS</div>
+          <div style="color:#fff;">26 TAREFAS PENDENTES</div>
+        </div>
+        <div style="margin-top:20px; padding:20px; background:rgba(255,255,255,0.04); border-left:4px solid #ffffff; border-radius:0 8px 8px 0;">
+          <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5);">ALERTA DE PRIORIDADE MÁXIMA</div>
+          <div style="font-size:20px; font-weight:800; margin-top:6px;">Ligar para Diretor Comercial (Santos)</div>
+          <div style="font-family:'JetBrains Mono', monospace; font-size:13px; color:rgba(255,255,255,0.7); margin-top:8px;">Último contato há 3 dias • Proposta enviada</div>
+          <div style="margin-top:16px; background:#fff; color:#000; padding:8px 16px; display:inline-block; font-weight:900; font-family:'JetBrains Mono', monospace; border-radius:4px;">
+            DISPARAR WHATSAPP / E-MAIL
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENA 4: FRASE 4 -> Analytics e métricas acionáveis em tempo real. -->
+    <div class="scene" id="scene4">
+      <div class="headline-container">
+        <div class="headline-tag">04 / METRICS THAT MATTER</div>
+        <div class="headline" id="hl4"></div>
+      </div>
+      <div class="ui-wrapper" id="ui4" style="height:620px; bottom:260px; padding:24px;">
+        <div class="ui-topbar">
+          <div class="ui-dots"><div class="ui-dot"></div><div class="ui-dot"></div><div class="ui-dot"></div></div>
+          <div>CONVERSION_ANALYTICS // REVENUE RADAR</div>
+          <div>METRICS ENGINE</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px;">
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); padding:20px; border-radius:8px; text-align:center;">
+            <div style="font-size:42px; font-weight:900;">34.8%</div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5); margin-top:6px;">CONVERSÃO PROPOSTA ➔ FECHAMENTO</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); padding:20px; border-radius:8px; text-align:center;">
+            <div style="font-size:42px; font-weight:900;">11 DIAS</div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:rgba(255,255,255,0.5); margin-top:6px;">TEMPO MÉDIO DE CICLO DE VENDAS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENA 5: FRASE 5 -> Construído para times que querem bater metas. -->
+    <div class="scene" id="scene5">
+      <div class="headline-container" style="text-align:center; left:50%; transform:translateX(-50%); width:920px;">
+        <div class="headline-tag" style="justify-content:center;">05 / CLOSING MISSION</div>
+        <div class="headline" id="hl5" style="justify-content:center; text-align:center;"></div>
+      </div>
+    </div>
+
+    <!-- CENA 6: LOGO + TAGLINE FINAL -->
+    <div class="scene" id="scene6">
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+        <div style="width:130px; height:130px; border:3px solid #fff; border-radius:28px; display:flex; align-items:center; justify-content:center; font-size:54px; font-weight:900;" id="finalLogo">
+          PR
+        </div>
+        <div class="logo-hero-text" style="margin-top:28px;">PROSPECTOR CRM</div>
+        <div style="font-family:'JetBrains Mono', monospace; font-size:20px; letter-spacing:4px; opacity:0.8; margin-top:16px;">
+          Inteligência Comercial e Pipeline B2B
+        </div>
+        <div style="margin-top:28px; font-family:'JetBrains Mono', monospace; font-size:15px; letter-spacing:2px; padding:8px 24px; border:1px solid rgba(255,255,255,0.25); border-radius:100px;">
+          web-sigma-seven-fczm4c576k.vercel.app
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const sentences = [
+      { id: 'hl1', text: "Planilhas não fecham vendas de alto ticket." },
+      { id: 'hl2', text: "Funil visual em Kanban para velocidade comercial." },
+      { id: 'hl3', text: "Priorização diária para não deixar leads esfriarem." },
+      { id: 'hl4', text: "Analytics e métricas acionáveis em tempo real." },
+      { id: 'hl5', text: "Construído para times que querem acelerar o faturamento." }
+    ];
+
+    sentences.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (!el) return;
+      const words = s.text.split(' ');
+      el.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+    });
+
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // 00:00 - 02:50s: CENA 0
+    tl.set('#scene0', { autoAlpha: 1 })
+      .fromTo('#logoIntro', { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'power3.out' })
+      .to('#scene0', { autoAlpha: 0, scale: 1.1, filter: 'blur(16px)', duration: 0.8, ease: 'power2.in' }, '+=0.8');
+
+    // 02:50 - 07:50s: CENA 1
+    tl.set('#scene1', { autoAlpha: 1 })
+      .to('#hl1 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui1', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene1', { autoAlpha: 0, x: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 07:50 - 12:50s: CENA 2
+    tl.set('#scene2', { autoAlpha: 1 })
+      .to('#hl2 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui2', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene2', { autoAlpha: 0, scale: 0.94, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 12:50 - 17:50s: CENA 3
+    tl.set('#scene3', { autoAlpha: 1 })
+      .to('#hl3 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui3', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene3', { autoAlpha: 0, y: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 17:50 - 22:50s: CENA 4
+    tl.set('#scene4', { autoAlpha: 1 })
+      .to('#hl4 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui4', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene4', { autoAlpha: 0, scale: 1.05, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 22:50 - 25:50s: CENA 5
+    tl.set('#scene5', { autoAlpha: 1 })
+      .to('#hl5 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#scene5', { autoAlpha: 0, filter: 'blur(20px)', scale: 1.15, duration: 0.8, ease: 'power2.in' }, '+=1.4');
+
+    // 25:50 - 30:00s: CENA 6
+    tl.set('#scene6', { autoAlpha: 1 })
+      .fromTo('#finalLogo', { scale: 2.0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'expo.out' })
+      .to('#scene6', { autoAlpha: 0, filter: 'blur(25px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    gsap.to('#progressBar', { width: '100%', duration: 30, ease: 'none', repeat: -1 });
+
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000) % 30;
+      const secs = Math.floor(elapsed).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `00:${secs}:${ms} / 00:30:00`;
+    }, 40);
+  </script>
+</body>
+</html>

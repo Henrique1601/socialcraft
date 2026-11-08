@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>OmniPDF Studio - Launch Story Motion</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      width: 1080px;
+      height: 1920px;
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+    }
+    .story-progress-container {
+      position: absolute;
+      top: 24px;
+      left: 40px;
+      right: 40px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    .story-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #FFFFFF;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+    .hud-header {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      letter-spacing: 0.15em;
+      color: #A0A0A0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 24px;
+    }
+    .hud-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 8px 18px;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .hud-tag::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #FFFFFF;
+    }
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .glow-core {
+      position: absolute;
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .scene {
+      position: absolute;
+      inset: 0;
+      padding: 160px 60px 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .headline-wrap {
+      margin-top: 40px;
+    }
+    .headline {
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+    }
+    .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px) rotateX(-20deg);
+      filter: blur(10px);
+      margin-right: 0.28em;
+    }
+    .subtext {
+      font-size: 26px;
+      color: #8E8E93;
+      line-height: 1.45;
+      max-width: 900px;
+      font-weight: 400;
+    }
+    .ui-mockup {
+      width: 100%;
+      background: #0A0A0C;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px;
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255,255,255,0.03);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(50px) scale(0.96);
+    }
+    .window-header {
+      background: #111115;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .win-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .win-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 17px;
+      color: #71717A;
+      margin-left: 12px;
+    }
+    .footer-watermark {
+      position: absolute;
+      bottom: 50px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      color: #52525B;
+      z-index: 100;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+    }
+    .final-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+    .final-logo {
+      font-size: 96px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .final-logo span {
+      background: #FFFFFF;
+      color: #000;
+      padding: 4px 24px;
+      border-radius: 20px;
+    }
+    .final-tagline {
+      font-size: 32px;
+      font-weight: 500;
+      color: #A1A1AA;
+      max-width: 860px;
+      line-height: 1.4;
+      margin-bottom: 60px;
+    }
+    .final-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 16px 40px;
+      border-radius: 999px;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="story-progress-container">
+    <div class="story-progress-bar" id="progressBar"></div>
+  </div>
+  <div class="grid-bg"></div>
+  <div class="glow-core"></div>
+
+  <div class="hud-header">
+    <div class="hud-tag">OMNIPDF STUDIO</div>
+    <div id="timer-display">00:00:00 / 00:30:00</div>
+  </div>
+
+  <!-- CENA 0: ABERTURA -->
+  <div class="scene" id="scene0" style="justify-content: center; align-items: center;">
+    <div style="text-align: center;">
+      <div id="openLogo" style="font-size: 96px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 20px;">
+        OMNI<span>PDF</span>
+      </div>
+      <div id="openSub" style="font-family: 'JetBrains Mono', monospace; font-size: 22px; color: #71717A; letter-spacing: 0.2em;">
+        STUDIO V1.0 // 100% OFFLINE & PRIVADO
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 1: TRUEEDIT NATIVO -->
+  <div class="scene" id="scene1">
+    <div class="headline-wrap">
+      <div class="headline" id="hl1">
+        Edição direta no documento com o revolucionário TrueEdit.
+      </div>
+      <div class="subtext">Modifique textos, fontes, parágrafos e imagens diretamente no PDF sem converter ou quebrar formatações.</div>
+    </div>
+    <div class="ui-mockup" id="ui1">
+      <div class="window-header">
+        <div class="win-dot"></div><div class="win-dot"></div><div class="win-dot"></div>
+        <div class="win-title">Contrato_Prestacao_Servicos_2026.pdf &bull; Modo TrueEdit</div>
+      </div>
+      <div style="padding: 36px; background: #0E0E12;">
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <span style="background: #FFF; color: #000; font-weight: 700; padding: 6px 14px; border-radius: 8px; font-size: 16px;">Texto</span>
+          <span style="background: rgba(255,255,255,0.06); padding: 6px 14px; border-radius: 8px; font-size: 16px;">Imagens</span>
+          <span style="background: rgba(255,255,255,0.06); padding: 6px 14px; border-radius: 8px; font-size: 16px;">Formas</span>
+          <span style="background: rgba(255,255,255,0.06); padding: 6px 14px; border-radius: 8px; font-size: 16px;">Assinatura</span>
+        </div>
+        <div style="background: #18181D; border: 1px dashed rgba(255,255,255,0.4); border-radius: 12px; padding: 24px; position: relative;">
+          <div style="position: absolute; top: -12px; right: 16px; background: #FFF; color: #000; font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 800; padding: 2px 10px; border-radius: 4px;">EDITING IN-PLACE</div>
+          <p style="font-size: 22px; line-height: 1.6; color: #E4E4E7;">
+            Cláusula 4ª: O valor mensal pactuado para prestação de serviços de engenharia de software de alta performance fica fixado em 
+            <span style="background: rgba(255,255,255,0.25); text-decoration: underline; padding: 0 4px; font-weight: 700;">R$ 18.500,00</span> com reajuste anual.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 2: 100% OFFLINE & PRIVACIDADE -->
+  <div class="scene" id="scene2">
+    <div class="headline-wrap">
+      <div class="headline" id="hl2">
+        Privacidade absoluta. Seus documentos nunca saem do seu PC.
+      </div>
+      <div class="subtext">Zero servidores na nuvem. Suas propostas financeiras, contratos e laudos confidenciais permanecem 100% locais.</div>
+    </div>
+    <div class="ui-mockup" id="ui2" style="padding: 36px; background: #0A0A0C;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: #FFF; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 24px;">✓</div>
+          <div>
+            <div style="font-size: 22px; font-weight: 800;">Modo Local Seguro Ativo</div>
+            <div style="font-size: 16px; color: #71717A;">Isolamento de rede completo certificado</div>
+          </div>
+        </div>
+        <div style="font-family: 'JetBrains Mono'; background: rgba(255,255,255,0.08); padding: 8px 16px; border-radius: 999px; font-size: 15px;">ZERO CLOUD UPLOAD</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono'; color: #71717A; font-size: 14px; margin-bottom: 6px;">PROCESSAMENTO</div>
+          <div style="font-weight: 800; font-size: 20px;">CPU / GPU Local</div>
+        </div>
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono'; color: #71717A; font-size: 14px; margin-bottom: 6px;">COMPATIBILIDADE</div>
+          <div style="font-weight: 800; font-size: 20px;">LGPD / GDPR Compliant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 3: IA INTEGRADA & OCR LOCAL -->
+  <div class="scene" id="scene3">
+    <div class="headline-wrap">
+      <div class="headline" id="hl3">
+        IA avançada para resumos e OCR offline ultra-rápido.
+      </div>
+      <div class="subtext">Converse com PDFs de centenas de páginas, extraia tabelas e reconheça textos digitalizados em segundos.</div>
+    </div>
+    <div class="ui-mockup" id="ui3" style="padding: 32px;">
+      <div style="background: #111115; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 24px; margin-bottom: 16px;">
+        <div style="font-family: 'JetBrains Mono'; font-size: 15px; color: #71717A; margin-bottom: 10px;">PROMPT DO USUÁRIO</div>
+        <div style="font-size: 20px; font-weight: 600;">"Resuma os principais riscos fiscais descritos na seção 3 do balanço."</div>
+      </div>
+      <div style="background: #0E0E12; border-left: 4px solid #FFF; border-radius: 12px; padding: 20px 24px;">
+        <div style="font-family: 'JetBrains Mono'; font-size: 14px; color: #A1A1AA; margin-bottom: 8px;">ASSISTENTE IA OMNIPDF (RESPOSTA INSTANTÂNEA)</div>
+        <div style="font-size: 18px; line-height: 1.5; color: #E4E4E7;">
+          1. Contingência trabalhista de R$ 420.000 provisionada no anexo B.<br>
+          2. Divergência na alíquota de ICMS interestadual com compensação pendente.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 4: SUÍTE COMPLETA -->
+  <div class="scene" id="scene4">
+    <div class="headline-wrap">
+      <div class="headline" id="hl4">
+        +30 ferramentas em uma única suíte desktop profissional.
+      </div>
+      <div class="subtext">Mesclar, comprimir, proteger com senha, converter para Word/Excel e assinar documentos com validade legal.</div>
+    </div>
+    <div class="ui-mockup" id="ui4" style="padding: 28px;">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px;">
+          <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Unir & Dividir</div>
+          <div style="color: #71717A; font-size: 14px;">Organize páginas livremente</div>
+        </div>
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px;">
+          <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Compressão Extrema</div>
+          <div style="color: #71717A; font-size: 14px;">Reduza até 90% sem perdas</div>
+        </div>
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px;">
+          <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Criptografia AES-256</div>
+          <div style="color: #71717A; font-size: 14px;">Proteção total por senha</div>
+        </div>
+        <div style="background: #111115; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px;">
+          <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Conversão Nativa</div>
+          <div style="color: #71717A; font-size: 14px;">PDF para DOCX, XLSX e PNG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 5: FRASE DE IMPACTO -->
+  <div class="scene" id="scene5" style="justify-content: center; align-items: center; text-align: center;">
+    <div>
+      <div class="headline" id="hl5" style="font-size: 78px; line-height: 1.15; max-width: 960px; margin: 0 auto;">
+        Diga adeus às assinaturas abusivas do Adobe Acrobat.
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 6: ENCERRAMENTO -->
+  <div class="scene" id="scene6">
+    <div class="final-stage">
+      <div class="final-logo" id="finalLogo">
+        OMNI<span>PDF</span> STUDIO
+      </div>
+      <div class="final-tagline">
+        A mais completa e privada suíte de PDF para Windows com TrueEdit e Inteligência Artificial.
+      </div>
+      <div class="final-badge">
+        DOWNLOAD DISPONÍVEL // OMNIPDF.DEV
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-watermark">
+    <div>HB COMPANY &bull; 2026</div>
+    <div>OMNIPDF STUDIO</div>
+  </div>
+
+  <script>
+    function wrapWords(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const text = el.innerText.trim();
+      const words = text.split(/\s+/);
+      el.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+    }
+
+    wrapWords('#hl1');
+    wrapWords('#hl2');
+    wrapWords('#hl3');
+    wrapWords('#hl4');
+    wrapWords('#hl5');
+
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // 00:00 - 03:00s: CENA 0
+    tl.set('#scene0', { autoAlpha: 1 })
+      .fromTo('#openLogo', { scale: 0.8, filter: 'blur(16px)', autoAlpha: 0 }, { scale: 1, filter: 'blur(0px)', autoAlpha: 1, duration: 1.1, ease: 'power4.out' })
+      .fromTo('#openSub', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene0', { autoAlpha: 0, scale: 1.1, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=1.0');
+
+    // 03:00 - 08:00s: CENA 1
+    tl.set('#scene1', { autoAlpha: 1 })
+      .to('#hl1 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#ui1', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene1', { autoAlpha: 0, x: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 08:00 - 13:00s: CENA 2
+    tl.set('#scene2', { autoAlpha: 1 })
+      .to('#hl2 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui2', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene2', { autoAlpha: 0, scale: 0.94, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 13:00 - 18:00s: CENA 3
+    tl.set('#scene3', { autoAlpha: 1 })
+      .to('#hl3 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui3', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene3', { autoAlpha: 0, y: -30, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 18:00 - 23:00s: CENA 4
+    tl.set('#scene4', { autoAlpha: 1 })
+      .to('#hl4 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.07, duration: 0.7, ease: 'power4.out' })
+      .to('#ui4', { autoAlpha: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('#scene4', { autoAlpha: 0, scale: 1.05, filter: 'blur(14px)', duration: 0.7, ease: 'power2.in' }, '+=2.0');
+
+    // 23:00 - 26:00s: CENA 5
+    tl.set('#scene5', { autoAlpha: 1 })
+      .to('#hl5 .word', { autoAlpha: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: 0.08, duration: 0.7, ease: 'power4.out' })
+      .to('#scene5', { autoAlpha: 0, filter: 'blur(20px)', scale: 1.15, duration: 0.8, ease: 'power2.in' }, '+=1.4');
+
+    // 26:00 - 30:00s: CENA 6
+    tl.set('#scene6', { autoAlpha: 1 })
+      .fromTo('#finalLogo', { scale: 2.0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'expo.out' })
+      .to('#scene6', { autoAlpha: 0, filter: 'blur(25px)', duration: 0.8, ease: 'power2.in' }, '+=2.0');
+
+    gsap.to('#progressBar', { width: '100%', duration: 30, ease: 'none', repeat: -1 });
+
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000) % 30;
+      const secs = Math.floor(elapsed).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `00:${secs}:${ms} / 00:30:00`;
+    }, 40);
+  </script>
+</body>
+</html>
