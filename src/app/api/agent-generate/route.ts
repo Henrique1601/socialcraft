@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       scheduledDate = new Date(customTime);
     }
 
-    // 3. Monta o Asset Preview Interativo DINÂMICO
+    // 3. Monta a URL de Prévia Visual Dinâmica
     const previewUrl = `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
 
     // 4. Resolve o arquivo binário real para o Buffer (Vídeo MP4 ou Imagem Mockup 3D)
@@ -64,15 +64,19 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString()
     };
 
-    // 5. Dispara para o Buffer com o payload de assets formatado por rede social
+    // 5. Dispara para o Buffer com o payload de assets cirurgicamente adaptado por rede social
     const token = await getValidBufferToken();
     const bufferResults = [];
     const bufferErrors = [];
 
+    // Mapeamento de canal para determinar se é instagram ou linkedin
+    const LINKEDIN_CHANNEL_IDS = ["6ad937ba778b240e2f820c1e"];
+
     if (token && autoPostToBuffer && targetChannels.length > 0) {
       for (const channelId of targetChannels) {
         try {
-          // Prepara payload de assets compatível com Buffer
+          const isLinkedIn = LINKEDIN_CHANNEL_IDS.includes(channelId);
+
           const postArgs: any = {
             channelId,
             schedulingType: "automatic",
@@ -91,13 +95,15 @@ export async function POST(request: Request) {
                 }
               }
             ];
-            // Configurações específicas por plataforma (Instagram exige type: 'reel')
-            postArgs.metadata = {
-              instagram: {
-                type: "reel",
-                shouldShareToFeed: true
-              }
-            };
+            // Somente Instagram recebe metadata.instagram
+            if (!isLinkedIn) {
+              postArgs.metadata = {
+                instagram: {
+                  type: "reel",
+                  shouldShareToFeed: true
+                }
+              };
+            }
           } else {
             // Imagem Mockup 3D / Print 4K
             postArgs.assets = [
@@ -110,12 +116,15 @@ export async function POST(request: Request) {
                 }
               }
             ];
-            postArgs.metadata = {
-              instagram: {
-                type: "post",
-                shouldShareToFeed: true
-              }
-            };
+            // Somente Instagram recebe metadata.instagram
+            if (!isLinkedIn) {
+              postArgs.metadata = {
+                instagram: {
+                  type: "post",
+                  shouldShareToFeed: true
+                }
+              };
+            }
           }
 
           const res = await fetch("https://mcp.buffer.com/mcp", {
