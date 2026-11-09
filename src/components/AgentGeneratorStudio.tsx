@@ -29,6 +29,8 @@ import {
 import { VIDEO_STYLES_CATALOG } from "@/data/posts";
 import confetti from "canvas-confetti";
 import allProjectsData from "@/data/projects.json";
+import { BentoCarouselViewer } from "@/components/BentoCarouselViewer";
+import { generateBentoCarouselData } from "@/lib/carousel-generator";
 
 interface Channel {
   id: string;
@@ -580,54 +582,62 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             )}
           </div>
 
-          <div className="relative aspect-[9/14] sm:aspect-video w-full bg-black rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center group shadow-2xl">
-            {activeJob ? (
-              <div className="w-full h-full relative">
-                {activeJob.previewUrl.endsWith(".html") || activeJob.previewUrl.includes("motion-preview") ? (
-                  <iframe
-                    src={activeJob.previewUrl}
-                    className="w-full h-full border-0 pointer-events-auto"
-                    title="Vídeo Motion Gerado"
-                  />
-                ) : (
-                  <img
-                    src={activeJob.assetUrl}
-                    alt="Mockup do Projeto"
-                    className="w-full h-full object-cover"
-                  />
-                )}
-                <div className="absolute top-3 right-3 flex items-center gap-2">
-                  <a
-                    href={activeJob.previewUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-black/70 hover:bg-black text-white p-2 rounded-xl backdrop-blur-md border border-zinc-700 transition-all"
-                    title="Abrir em Tela Cheia"
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={activeJob.assetUrl}
-                    download={`socialcraft-${activeJob.project}.mp4`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-cyan-500 hover:bg-cyan-400 text-black p-2 rounded-xl font-bold backdrop-blur-md transition-all flex items-center gap-1 text-xs"
-                    title="Baixar Arquivo"
-                  >
-                    <Download className="w-4 h-4" />
-                  </a>
+          {/* Visualizador Inteligente: Suporte a Carrossel Bento com Download PDF/PNG ou Motion Player */}
+          {activeJob && activeJob.assetType === "carousel" ? (
+            <BentoCarouselViewer 
+              slides={activeJob.carouselSlides || generateBentoCarouselData(activeJob.project, activeJob.projectDesc || "")} 
+              projectName={activeJob.project} 
+            />
+          ) : (
+            <div className="relative aspect-[9/14] sm:aspect-video w-full bg-black rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center group shadow-2xl">
+              {activeJob ? (
+                <div className="w-full h-full relative">
+                  {activeJob.previewUrl.endsWith(".html") || activeJob.previewUrl.includes("motion-preview") ? (
+                    <iframe
+                      src={activeJob.previewUrl}
+                      className="w-full h-full border-0 pointer-events-auto"
+                      title="Vídeo Motion Gerado"
+                    />
+                  ) : (
+                    <img
+                      src={activeJob.assetUrl}
+                      alt="Mockup do Projeto"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <a
+                      href={activeJob.previewUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-black/70 hover:bg-black text-white p-2 rounded-xl backdrop-blur-md border border-zinc-700 transition-all"
+                      title="Abrir em Tela Cheia"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={activeJob.assetUrl}
+                      download={`socialcraft-${activeJob.project}.mp4`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-cyan-500 hover:bg-cyan-400 text-black p-2 rounded-xl font-bold backdrop-blur-md transition-all flex items-center gap-1 text-xs"
+                      title="Baixar Arquivo"
+                    >
+                      <Download className="w-4 h-4" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center p-6 text-center text-zinc-600">
-                <Film className="w-12 h-12 mb-3 opacity-30 text-zinc-500" />
-                <p className="text-xs font-semibold text-zinc-400">Nenhum asset renderizado ainda</p>
-                <p className="text-[11px] text-zinc-600 mt-1 max-w-xs">
-                  Quando os agentes finalizarem, o player interativo tocará a animação 9:16 ou o mockup 3D aqui.
-                </p>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-6 text-center text-zinc-600">
+                  <Film className="w-12 h-12 mb-3 opacity-30 text-zinc-500" />
+                  <p className="text-xs font-semibold text-zinc-400">Nenhum asset renderizado ainda</p>
+                  <p className="text-[11px] text-zinc-600 mt-1 max-w-xs">
+                    Quando os agentes finalizarem, o player interativo tocará a animação 9:16 ou o mockup 3D aqui.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Dados de Agendamento do Buffer Confirmados */}
           {activeJob && (

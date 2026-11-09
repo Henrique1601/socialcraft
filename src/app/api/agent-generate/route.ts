@@ -3,6 +3,7 @@ import { generateSmartCopy } from "@/lib/copywriter";
 import { getValidBufferToken } from "@/lib/buffer-auth";
 import { getProjectAssets } from "@/lib/asset-catalog";
 import { getProjectMotionUrl } from "@/data/real-motions";
+import { generateBentoCarouselData } from "@/lib/carousel-generator";
 
 export async function POST(request: Request) {
   try {
@@ -39,11 +40,18 @@ export async function POST(request: Request) {
       scheduledDate = new Date(customTime);
     }
 
-    // 3. Verifica se o projeto possui um Motion HTML Real construído!
+    // 3. Verifica URLs de Prévia (Motion, Carrossel Bento ou Mockup)
     const realMotionPath = getProjectMotionUrl(projectName);
-    const previewUrl = realMotionPath 
-      ? realMotionPath 
-      : `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
+    let previewUrl = `/api/motion-preview?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}&style=${encodeURIComponent(style)}`;
+
+    if (assetType === "carousel") {
+      previewUrl = `/api/bento-carousel?title=${encodeURIComponent(projectName)}&desc=${encodeURIComponent(projectDesc)}`;
+    } else if (realMotionPath) {
+      previewUrl = realMotionPath;
+    }
+
+    // Gera dados dos slides caso seja carrossel
+    const carouselSlides = assetType === "carousel" ? generateBentoCarouselData(projectName, projectDesc) : null;
 
     // 4. Resolve o arquivo binário real para o Buffer (Vídeo MP4 ou Imagem Mockup 3D)
     const assetBundle = getProjectAssets(projectName, style);
@@ -60,7 +68,8 @@ export async function POST(request: Request) {
       status: "completed",
       assetUrl: bufferMediaUrl,
       previewUrl: previewUrl,
-      isRealMotion: !!realMotionPath,
+      carouselSlides,
+      isRealMotion: !!realMotionPath && assetType === "video",
       headline,
       copy: fullCaption,
       hashtags: copyResult.hashtags,
