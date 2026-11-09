@@ -2,17 +2,31 @@
 
 import React, { useState, useEffect } from "react";
 import { SocialPost } from "@/types/social";
-import { Calendar as CalendarIcon, Clock, Share2, CheckCircle2, RefreshCw, Send, Layers, ExternalLink } from "lucide-react";
+import { 
+  Calendar as CalendarIcon, 
+  Clock, 
+  Share2, 
+  CheckCircle2, 
+  RefreshCw, 
+  Send, 
+  Layers, 
+  Trash2, 
+  Play, 
+  AlertCircle,
+  ExternalLink,
+  Edit2
+} from "lucide-react";
+import confetti from "canvas-confetti";
 
 interface ScheduleCalendarProps {
   posts: SocialPost[];
 }
 
 export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps) {
-  const [activeTab, setActiveTab] = useState<"live-buffer" | "local">("live-buffer");
   const [bufferPosts, setBufferPosts] = useState<any[]>([]);
   const [selectedChannel, setSelectedChannel] = useState("6ad937ba778b240e2f820c1e"); // LinkedIn
   const [isLoading, setIsLoading] = useState(false);
+  const [processingPostId, setProcessingPostId] = useState<string | null>(null);
 
   const channelsList = [
     { id: "6ad937ba778b240e2f820c1e", name: "LinkedIn (Henrique)", service: "linkedin" },
@@ -39,6 +53,55 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
     fetchBufferPosts(selectedChannel);
   }, [selectedChannel]);
 
+  // AÇÃO 1: PUBLICAR AGORA
+  const handlePublishNow = async (postId: string) => {
+    if (!confirm("Deseja publicar este post imediatamente na rede social via Buffer?")) return;
+    setProcessingPostId(postId);
+
+    try {
+      const res = await fetch("/api/buffer/manage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "share_now", postId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        fetchBufferPosts(selectedChannel);
+      } else {
+        alert("Erro ao publicar: " + (data.error || "Tente novamente"));
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setProcessingPostId(null);
+    }
+  };
+
+  // AÇÃO 2: EXCLUIR POST
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm("Tem certeza que deseja excluir este post da fila do Buffer?")) return;
+    setProcessingPostId(postId);
+
+    try {
+      const res = await fetch("/api/buffer/manage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", postId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBufferPosts((prev) => prev.filter((p) => p.id !== postId));
+      } else {
+        alert("Erro ao excluir: " + (data.error || "Tente novamente"));
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setProcessingPostId(null);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
@@ -47,7 +110,7 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
             <CalendarIcon className="w-5 h-5 text-emerald-400" />
             <h2 className="font-bold text-white text-lg">Esteira de Agendamentos & Buffer Live Queue</h2>
           </div>
-          <p className="text-xs text-zinc-400 mt-0.5">Gerencie os posts reais agendados no Buffer ou na fila local</p>
+          <p className="text-xs text-zinc-400 mt-0.5">Gerencie seus posts reais, publique imediatamente ou remova da fila</p>
         </div>
 
         {/* Alternador de Canais do Buffer */}
@@ -87,15 +150,16 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {bufferPosts.map((post) => {
             const hasMedia = post.assets && post.assets.length > 0;
             const asset = hasMedia ? post.assets[0] : null;
+            const isProcessing = processingPostId === post.id;
 
             return (
               <div
                 key={post.id}
-                className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/40 transition-all group shadow-lg"
+                className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/40 transition-all group shadow-xl"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -135,13 +199,31 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-zinc-900 flex items-center justify-between text-xs">
-                  <span className="text-zinc-500 font-mono text-[11px]">
-                    {post.channelService.toUpperCase()}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-emerald-400 font-medium">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Sincronizado</span>
+                {/* Barra de Ações Diretas: Publicar Agora e Excluir */}
+                <div className="mt-4 pt-3 border-t border-zinc-900 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handlePublishNow(post.id)}
+                      disabled={isProcessing}
+                      className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-black font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer border border-emerald-500/30"
+                      title="Publicar este rascunho agora no canal"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-current" />
+                      <span>{isProcessing ? "Enviando..." : "Postar Agora"}</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleDeletePost(post.id)}
+                      disabled={isProcessing}
+                      className="p-1.5 bg-zinc-900 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-400 rounded-lg transition-all cursor-pointer border border-zinc-800 hover:border-rose-500/30"
+                      title="Excluir post da fila do Buffer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <span className="text-zinc-500 font-mono text-[10px] uppercase">
+                    {post.channelService}
                   </span>
                 </div>
               </div>
