@@ -6,7 +6,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { channelId, text, assetUrl, dueAt, mode = "addToQueue", saveToDraft = true } = body;
+    const { channelId, text, assetUrl, dueAt, mode = "addToQueue", saveToDraft = true, metadata } = body;
 
     if (!channelId || !text) {
       return NextResponse.json(
@@ -29,6 +29,10 @@ export async function POST(request: Request) {
       saveToDraft,
       mode
     };
+
+    if (metadata) {
+      args.metadata = metadata;
+    }
 
     if (dueAt && mode === "customScheduled") {
       args.dueAt = dueAt;
