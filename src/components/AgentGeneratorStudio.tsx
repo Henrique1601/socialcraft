@@ -49,17 +49,46 @@ interface AgentGeneratorStudioProps {
 }
 
 export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudioProps) {
-  // Filtros de Projetos
+  // Filtros de Projetos + Projetos Importados (URL / GitHub Live)
   const [sourceFilter, setSourceFilter] = useState<"all" | "local" | "github">("all");
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // Lista de Projetos
+  const [customProjects, setCustomProjects] = useState<any[]>([]);
+  const [isImportingUrl, setIsImportingUrl] = useState(false);
+  const [isSyncingGithub, setIsSyncingGithub] = useState(false);
+  const [importFeedback, setImportFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("socialcraft_custom_projects");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setCustomProjects(parsed);
+      }
+    } catch {}
+  }, []);
+
+  const saveCustomProjects = (nextList: any[]) => {
+    setCustomProjects(nextList);
+    try {
+      localStorage.setItem("socialcraft_custom_projects", JSON.stringify(nextList.slice(0, 40)));
+    } catch {}
+  };
+
+  // Lista de Projetos (Importados + Locais + GitHub)
   const allProjects = useMemo(() => {
-    return [
+    const base = [
+      ...customProjects,
       ...allProjectsData.local.map((p) => ({ ...p, isLocal: true })),
       ...allProjectsData.github.map((p) => ({ ...p, isLocal: false }))
     ];
-  }, []);
+    const seen = new Set<string>();
+    return base.filter((p) => {
+      const key = p.name.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [customProjects]);
 
   const filteredProjects = useMemo(() => {
     return allProjects.filter((p) => {
@@ -164,6 +193,53 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       setBufferAuthError(err?.message || "Erro ao conectar");
     } finally {
       setIsSavingToken(false);
+    }
+  };
+
+  const handleImportUrl = async () => {
+    if (!customLiveUrl.trim()) return;
+    setIsImportingUrl(true);
+    setImportFeedback(null);
+    try {
+      const res = await fetch("/api/import-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: customLiveUrl.trim() })
+      });
+      const data = await res.json();
+      if (data.success && data.project) {
+        const nextList = [data.project, ...customProjects.filter((p) => p.source !== data.project.source)];
+        saveCustomProjects(nextList);
+        setSelectedProject(data.project);
+        setImportFeedback(`Site importado: ${data.project.name}`);
+      } else {
+        setImportFeedback(data.error || "Não foi possível analisar a URL.");
+      }
+    } catch (err: any) {
+      setImportFeedback(err?.message || "Erro ao importar URL.");
+    } finally {
+      setIsImportingUrl(false);
+    }
+  };
+
+  const handleSyncGithub = async () => {
+    setIsSyncingGithub(true);
+    setImportFeedback(null);
+    try {
+      const res = await fetch("/api/import-github?username=Henrique1601");
+      const data = await res.json();
+      if (data.success && Array.isArray(data.projects)) {
+        const merged = [...customProjects.filter((p) => !p.id?.startsWith("gh-live-")), ...data.projects];
+        saveCustomProjects(merged);
+        setSourceFilter("github");
+        setImportFeedback(`${data.projects.length} repositórios sincronizados do GitHub!`);
+      } else {
+        setImportFeedback(data.error || "Erro ao sincronizar GitHub.");
+      }
+    } catch (err: any) {
+      setImportFeedback(err?.message || "Erro de rede no GitHub.");
+    } finally {
+      setIsSyncingGithub(false);
     }
   };
 
@@ -309,8 +385,15 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   disabled={isSavingToken || !tokenInput.trim()}
                   className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold cursor-pointer disabled:opacity-50 shrink-0"
                 >
-                  {isSavingToken ? "Validando..." : "Conectar Buffer"}
+                  {isSavingToken ? "Validando..." : "Conectar Token"}
                 </button>
+                <a
+                  href="/api/auth/buffer/login"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold border border-zinc-700 text-center shrink-0 transition-all"
+                  title="Fluxo OAuth2 PKCE oficial do Buffer"
+                >
+                  OAuth 1-Clique
+                </a>
               </div>
             </div>
           )}
@@ -352,6 +435,16 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   <GitBranch className="w-3.5 h-3.5" />
                   GitHub ({allProjectsData.github.length})
                 </button>
+                <button
+                  type="button"
+                  onClick={handleSyncGithub}
+                  disabled={isSyncingGithub}
+                  className="px-2.5 py-1 rounded-md text-cyan-400 hover:bg-cyan-500/10 font-bold flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                  title="Buscar repositórios atualizados direto da API do GitHub"
+                >
+                  <RefreshCw className={`w-3 h-3 ${isSyncingGithub ? "animate-spin" : ""}`} />
+                  Sync
+                </button>
               </div>
             </div>
 
@@ -366,16 +459,33 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
               />
             </div>
 
-            <div className="relative">
-              <Link2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" />
-              <input
-                type="url"
-                placeholder="URL do site/deploy ao vivo (opcional, ex: https://jmmotorrs.vercel.app/)"
-                value={customLiveUrl}
-                onChange={(e) => setCustomLiveUrl(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-all"
-              />
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <Link2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" />
+                <input
+                  type="url"
+                  placeholder="URL do site/deploy ao vivo (ex: https://jmmotorrs.vercel.app/)"
+                  value={customLiveUrl}
+                  onChange={(e) => setCustomLiveUrl(e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-all"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleImportUrl}
+                disabled={isImportingUrl || !customLiveUrl.trim()}
+                className="px-3.5 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-bold cursor-pointer disabled:opacity-50 shrink-0 flex items-center justify-center gap-1.5"
+              >
+                {isImportingUrl ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                <span>Analisar & Importar</span>
+              </button>
             </div>
+
+            {importFeedback && (
+              <p className="text-[11px] text-cyan-300 bg-cyan-950/30 border border-cyan-500/30 rounded-lg px-3 py-1.5">
+                {importFeedback}
+              </p>
+            )}
 
             <div className="relative">
               <Sparkles className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400" />

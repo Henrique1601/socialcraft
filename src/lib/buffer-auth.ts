@@ -65,12 +65,16 @@ export function setInMemoryBufferToken(accessToken: string, expiresInSeconds = 3
 }
 
 export async function getValidBufferToken(): Promise<string | null> {
+  let cookieRefreshToken: string | undefined;
+
   // 1. Verifica cookie salvo pela interface (não quebra durante prerender estático)
   try {
     const cookieStore = await cookies();
     const userCookieToken = cookieStore.get("buffer_access_token")?.value;
+    cookieRefreshToken = cookieStore.get("buffer_refresh_token")?.value;
     if (userCookieToken) {
-      return userCookieToken;
+      const check = await verifyBufferToken(userCookieToken);
+      if (check.valid) return userCookieToken;
     }
   } catch {
     // Contexto sem request/cookies (ex: build time)
@@ -82,8 +86,8 @@ export async function getValidBufferToken(): Promise<string | null> {
   }
 
   const envAccessToken = process.env.BUFFER_ACCESS_TOKEN;
-  const refreshToken = process.env.BUFFER_REFRESH_TOKEN;
-  const clientId = process.env.BUFFER_CLIENT_ID || "39a9dca5-3edf-4dd9-bc3f-910740a7e333";
+  const refreshToken = cookieRefreshToken || process.env.BUFFER_REFRESH_TOKEN;
+  const clientId = process.env.BUFFER_OAUTH_CLIENT_ID || process.env.BUFFER_CLIENT_ID || "39a9dca5-3edf-4dd9-bc3f-910740a7e333";
 
   // 3. Testa o token da variável de ambiente
   if (envAccessToken) {
