@@ -27,6 +27,7 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
   const [selectedChannel, setSelectedChannel] = useState("6ad937ba778b240e2f820c1e"); // LinkedIn
   const [isLoading, setIsLoading] = useState(false);
   const [processingPostId, setProcessingPostId] = useState<string | null>(null);
+  const [bufferError, setBufferError] = useState<string | null>(null);
 
   const channelsList = [
     { id: "6ad937ba778b240e2f820c1e", name: "LinkedIn (Henrique)", service: "linkedin" },
@@ -36,14 +37,18 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
 
   const fetchBufferPosts = async (channelId: string) => {
     setIsLoading(true);
+    setBufferError(null);
     try {
       const res = await fetch(`/api/buffer/posts?channelId=${channelId}`);
       const data = await res.json();
       if (data.success && data.posts) {
         setBufferPosts(data.posts);
+      } else {
+        setBufferPosts([]);
+        setBufferError(data.error || "Falha ao consultar fila do Buffer.");
       }
-    } catch (e) {
-      console.error("Erro ao buscar posts do Buffer:", e);
+    } catch (e: any) {
+      setBufferError(e?.message || "Erro de rede ao consultar Buffer.");
     } finally {
       setIsLoading(false);
     }
@@ -140,6 +145,15 @@ export function ScheduleCalendar({ posts: initialPosts }: ScheduleCalendarProps)
         <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
           <RefreshCw className="w-8 h-8 animate-spin mb-3 text-cyan-400" />
           <p className="text-xs">Consultando a API oficial do Buffer em tempo real...</p>
+        </div>
+      ) : bufferError ? (
+        <div className="bg-rose-950/30 border border-rose-500/40 rounded-3xl p-10 text-center flex flex-col items-center">
+          <AlertCircle className="w-10 h-10 text-rose-400 mb-3" />
+          <h3 className="font-bold text-white text-base">Falha ao conectar com o Buffer</h3>
+          <p className="text-xs text-rose-300 mt-1 max-w-md">{bufferError}</p>
+          <p className="text-[11px] text-zinc-400 mt-2">
+            Vá até a aba &quot;Criar com IA&quot; e cole um novo Buffer Access Token para reconectar.
+          </p>
         </div>
       ) : bufferPosts.length === 0 ? (
         <div className="bg-zinc-950/60 border border-zinc-800 rounded-3xl p-12 text-center flex flex-col items-center">

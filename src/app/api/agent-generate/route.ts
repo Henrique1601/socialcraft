@@ -19,7 +19,10 @@ export async function POST(request: Request) {
       customCopy = null,
       copyStyle = "technical",
       autoPostToBuffer = true,
-      publishMode = "addToQueue"
+      publishMode = "addToQueue",
+      instagramFormat = "reel",
+      highlightPhrase = "",
+      uploadedVideoUrl = null
     } = body;
 
     const projectName = typeof project === "object" ? project.name : (project || "Projeto");
@@ -28,8 +31,9 @@ export async function POST(request: Request) {
 
     // 1. Gera Copywriting Otimizado (ou usa o customizado se o usuário editou na tela)
     const copyResult = generateSmartCopy(projectName, copyStyle as any);
-    const headline = `🚀 Conheça o ${projectName}: ${projectDesc}`;
-    const fullCaption = customCopy || `${copyResult.caption}\n\nConfira todos os detalhes no GitHub ou teste agora mesmo!`;
+    const highlightLine = highlightPhrase?.trim() ? `👉 ${highlightPhrase.trim().toUpperCase()}\n` : "";
+    const headline = `${highlightLine}🚀 Conheça o ${projectName}: ${projectDesc}`;
+    const fullCaption = customCopy || `${copyResult.caption}${resolvedLiveUrl ? `\n\n🔗 Acesse: ${resolvedLiveUrl}` : ""}`;
 
     // 2. Determina Horário via IA (pico brasileiro 18h45 ou 12h15)
     let scheduledDate = new Date();
@@ -56,10 +60,15 @@ export async function POST(request: Request) {
     // Gera dados dos slides caso seja carrossel
     const carouselSlides = assetType === "carousel" ? generateBentoCarouselData(projectName, projectDesc) : null;
 
-    // 4. Resolve o arquivo real para o Buffer (MP4 real do projeto ou captura real da tela)
+    // 4. Resolve o arquivo real para o Buffer (MP4 real do projeto, vídeo hospedado ou captura real da tela)
     const assetBundle = getProjectAssets(projectName, style, resolvedLiveUrl);
-    const useVideoForBuffer = assetType === "video" && assetBundle.hasRealMp4 && !!assetBundle.videoUrl;
-    const bufferMediaUrl = useVideoForBuffer ? assetBundle.videoUrl! : assetBundle.mockup3DUrl;
+    const resolvedVideoUrl = uploadedVideoUrl || (assetBundle.hasRealMp4 ? assetBundle.videoUrl : null);
+    const useVideoForBuffer = assetType === "video" && !!resolvedVideoUrl && instagramFormat !== "story";
+    const bufferMediaUrl = useVideoForBuffer
+      ? resolvedVideoUrl!
+      : instagramFormat === "story"
+      ? assetBundle.thumbnailUrl
+      : assetBundle.mockup3DUrl;
 
     // 5. Dispara para o Buffer com status 100% honesto
     const token = await getValidBufferToken();
@@ -100,8 +109,8 @@ export async function POST(request: Request) {
               if (!isLinkedIn) {
                 postArgs.metadata = {
                   instagram: {
-                    type: "reel",
-                    shouldShareToFeed: true
+                    type: instagramFormat === "story" ? "story" : "reel",
+                    shouldShareToFeed: instagramFormat !== "story"
                   }
                 };
               }
@@ -119,8 +128,8 @@ export async function POST(request: Request) {
               if (!isLinkedIn) {
                 postArgs.metadata = {
                   instagram: {
-                    type: "post",
-                    shouldShareToFeed: true
+                    type: instagramFormat === "story" ? "story" : "post",
+                    shouldShareToFeed: instagramFormat !== "story"
                   }
                 };
               }

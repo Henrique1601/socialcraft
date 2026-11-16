@@ -1,6 +1,20 @@
 {
   "local": [
     {
+      "id": "client-jmmotorrs",
+      "name": "jmmotorrs (JM Motors Santos)",
+      "type": "local",
+      "source": "https://jmmotorrs.vercel.app/",
+      "desc": "Landing Page de Motos Novas e Seminovas • Santos/SP"
+    },
+    {
+      "id": "client-jm-motors-eletric",
+      "name": "jm-motors (JM Motors Eletric Bike)",
+      "type": "local",
+      "source": "https://jm-motors-nine.vercel.app/",
+      "desc": "Landing Page de Motos e Scooters Elétricas • Santos/SP"
+    },
+    {
       "id": "local-1--cronometro",
       "name": "1° Cronometro",
       "type": "local",

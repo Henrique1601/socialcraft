@@ -79,8 +79,12 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
   // Estados de Seleção
   const [selectedProject, setSelectedProject] = useState(allProjects[0]);
   const [customLiveUrl, setCustomLiveUrl] = useState("");
+  const [highlightPhrase, setHighlightPhrase] = useState("");
   const [selectedAssetType, setSelectedAssetType] = useState<"video" | "screenshot" | "carousel">("video");
   const [selectedStyle, setSelectedStyle] = useState(VIDEO_STYLES_CATALOG[0].id);
+  const [instagramFormat, setInstagramFormat] = useState<"reel" | "story" | "post">("reel");
+  const [publishMode, setPublishMode] = useState<"addToQueue" | "shareNow" | "draft">("addToQueue");
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(null);
 
   // Canais Conectados (Buffer) + Status Real de Autenticação
   const [availableChannels, setAvailableChannels] = useState<Channel[]>([]);
@@ -207,8 +211,12 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
         body: JSON.stringify({
           project: selectedProject,
           liveUrl: customLiveUrl.trim() || null,
+          highlightPhrase: highlightPhrase.trim() || "",
           style: selectedStyle,
           assetType: selectedAssetType,
+          instagramFormat,
+          publishMode,
+          uploadedVideoUrl,
           targetChannels: selectedChannelIds,
           schedulePreference: scheduleMode,
           customTime: customDateTime,
@@ -366,6 +374,17 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                 value={customLiveUrl}
                 onChange={(e) => setCustomLiveUrl(e.target.value)}
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <Sparkles className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400" />
+              <input
+                type="text"
+                placeholder="Frase em destaque no vídeo e legenda (ex: Só falta arrumar o domínio com o cliente!)"
+                value={highlightPhrase}
+                onChange={(e) => setHighlightPhrase(e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-all"
               />
             </div>
 
@@ -638,11 +657,62 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             </div>
           </div>
 
+          {/* Formato Instagram & Modo de Publicação */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex flex-col gap-2">
+              <span className="text-[10px] font-mono text-zinc-400 uppercase">Formato no Instagram</span>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { id: "reel", label: "Reels" },
+                  { id: "story", label: "Story" },
+                  { id: "post", label: "Feed" }
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setInstagramFormat(opt.id as any)}
+                    className={`py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      instagramFormat === opt.id
+                        ? "bg-purple-500 text-white"
+                        : "bg-zinc-900 text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex flex-col gap-2">
+              <span className="text-[10px] font-mono text-zinc-400 uppercase">Ação no Buffer</span>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { id: "addToQueue", label: "Fila" },
+                  { id: "shareNow", label: "Agora" },
+                  { id: "draft", label: "Rascunho" }
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setPublishMode(opt.id as any)}
+                    className={`py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      publishMode === opt.id
+                        ? "bg-emerald-500 text-black"
+                        : "bg-zinc-900 text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Disparo Automático ao Buffer */}
           <div className="flex items-center justify-between p-3 bg-zinc-950 rounded-xl border border-zinc-800">
             <div className="flex items-center gap-2">
               <Share2 className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-zinc-300">Anexar Mídia e Criar Rascunho Oficial no Buffer</span>
+              <span className="text-xs text-zinc-300">Enviar Mídia e Publicar/Agendar no Buffer</span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -702,9 +772,12 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             <CanvasMotionRecorder
               projectName={activeJob.project}
               projectDesc={activeJob.projectDesc || ""}
+              styleId={activeJob.style}
               styleName={VIDEO_STYLES_CATALOG.find((s) => s.id === activeJob.style)?.name || activeJob.style}
+              highlightPhrase={highlightPhrase}
               screenshotUrl={activeJob.screenshotUrl || activeJob.assetUrl}
               liveUrl={activeJob.liveUrl}
+              onVideoUploaded={(url) => setUploadedVideoUrl(url)}
             />
           ) : (
             <div className="relative aspect-[9/14] sm:aspect-video w-full bg-black rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center group shadow-2xl">
