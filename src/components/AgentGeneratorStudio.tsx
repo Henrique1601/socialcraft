@@ -24,12 +24,16 @@ import {
   Download,
   Edit3,
   CheckSquare,
-  Square
+  Square,
+  AlertTriangle,
+  Link2,
+  KeyRound
 } from "lucide-react";
 import { VIDEO_STYLES_CATALOG } from "@/data/posts";
 import confetti from "canvas-confetti";
 import allProjectsData from "@/data/projects.json";
 import { BentoCarouselViewer } from "@/components/BentoCarouselViewer";
+import { CanvasMotionRecorder } from "@/components/CanvasMotionRecorder";
 import { generateBentoCarouselData } from "@/lib/carousel-generator";
 
 interface Channel {
@@ -74,13 +78,19 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
 
   // Estados de Seleção
   const [selectedProject, setSelectedProject] = useState(allProjects[0]);
+  const [customLiveUrl, setCustomLiveUrl] = useState("");
   const [selectedAssetType, setSelectedAssetType] = useState<"video" | "screenshot" | "carousel">("video");
   const [selectedStyle, setSelectedStyle] = useState(VIDEO_STYLES_CATALOG[0].id);
 
-  // Canais Conectados (Buffer)
+  // Canais Conectados (Buffer) + Status Real de Autenticação
   const [availableChannels, setAvailableChannels] = useState<Channel[]>([]);
   const [selectedChannelIds, setSelectedChannelIds] = useState<string[]>([]);
   const [isLoadingChannels, setIsLoadingChannels] = useState(true);
+  const [bufferConnected, setBufferConnected] = useState<boolean | null>(null);
+  const [bufferAuthError, setBufferAuthError] = useState<string | null>(null);
+  const [bufferAccountName, setBufferAccountName] = useState<string | null>(null);
+  const [tokenInput, setTokenInput] = useState("");
+  const [isSavingToken, setIsSavingToken] = useState(false);
 
   // Agendamento & Horário (IA Inteligente vs Manual)
   const [scheduleMode, setScheduleMode] = useState<"ai-smart" | "custom">("ai-smart");
@@ -97,24 +107,61 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
   const [activeJob, setActiveJob] = useState<any>(null);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
 
-  // Carrega os canais reais do Buffer
-  useEffect(() => {
-    async function loadChannels() {
-      try {
-        const res = await fetch("/api/buffer/channels");
-        const data = await res.json();
-        if (data.channels && data.channels.length > 0) {
-          setAvailableChannels(data.channels);
-          setSelectedChannelIds(data.channels.map((c: Channel) => c.id));
+  const loadBufferState = async () => {
+    setIsLoadingChannels(true);
+    try {
+      const [tokenRes, chanRes] = await Promise.all([
+        fetch("/api/buffer/token"),
+        fetch("/api/buffer/channels")
+      ]);
+      const tokenData = await tokenRes.json();
+      const chanData = await chanRes.json();
+
+      setBufferConnected(!!tokenData.connected);
+      setBufferAuthError(tokenData.connected ? null : (tokenData.error || chanData.error || "Token expirado"));
+      setBufferAccountName(tokenData.account?.name || tokenData.account?.email || null);
+
+      if (chanData.channels && chanData.channels.length > 0) {
+        setAvailableChannels(chanData.channels);
+        if (selectedChannelIds.length === 0) {
+          setSelectedChannelIds(chanData.channels.map((c: Channel) => c.id));
         }
-      } catch (e) {
-        console.error("Erro ao carregar canais do Buffer:", e);
-      } finally {
-        setIsLoadingChannels(false);
       }
+    } catch (e: any) {
+      setBufferConnected(false);
+      setBufferAuthError(e?.message || "Erro ao consultar Buffer");
+    } finally {
+      setIsLoadingChannels(false);
     }
-    loadChannels();
+  };
+
+  useEffect(() => {
+    loadBufferState();
   }, []);
+
+  const handleSaveBufferToken = async () => {
+    if (!tokenInput.trim()) return;
+    setIsSavingToken(true);
+    setBufferAuthError(null);
+    try {
+      const res = await fetch("/api/buffer/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken: tokenInput.trim() })
+      });
+      const data = await res.json();
+      if (data.connected) {
+        setTokenInput("");
+        await loadBufferState();
+      } else {
+        setBufferAuthError(data.error || "Token inválido");
+      }
+    } catch (err: any) {
+      setBufferAuthError(err?.message || "Erro ao conectar");
+    } finally {
+      setIsSavingToken(false);
+    }
+  };
 
   const toggleChannel = (channelId: string) => {
     setSelectedChannelIds((prev) =>
@@ -159,6 +206,7 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           project: selectedProject,
+          liveUrl: customLiveUrl.trim() || null,
           style: selectedStyle,
           assetType: selectedAssetType,
           targetChannels: selectedChannelIds,
@@ -174,6 +222,14 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       if (data.success && data.job) {
         setActiveJob(data.job);
         setCustomCopyText(data.job.copy);
+        if (data.job.bufferStatus === "error") {
+          setGenerationLogs((prev) => [
+            ...prev,
+            `[buffer-error] ⚠️ ${data.job.bufferErrorMessage || "Falha ao enviar para o Buffer"}`
+          ]);
+        } else if (data.bufferResults?.length > 0) {
+          confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+        }
         if (onAssetDispatched) {
           onAssetDispatched(data.job);
         }
@@ -182,7 +238,6 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
       console.error(e);
     } finally {
       setIsGenerating(false);
-      confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
     }
   };
 
@@ -202,11 +257,55 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
               </div>
             </div>
             <div className="flex items-center gap-2">
+              {bufferConnected === true ? (
+                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Buffer OK {bufferAccountName ? `(${bufferAccountName})` : ""}
+                </span>
+              ) : bufferConnected === false ? (
+                <span className="text-[11px] font-mono text-rose-400 bg-rose-500/10 border border-rose-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  Buffer Desconectado
+                </span>
+              ) : null}
               <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-full">
                 {allProjects.length} PROJETOS
               </span>
             </div>
           </div>
+
+          {/* Alerta Honesto do Buffer quando o Token Expirar */}
+          {bufferConnected === false && (
+            <div className="bg-rose-950/30 border border-rose-500/40 rounded-2xl p-4 flex flex-col gap-3">
+              <div className="flex items-start gap-2.5">
+                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <div className="text-xs text-rose-200">
+                  <strong className="text-white block">Conexão com o Buffer expirada ou ausente</strong>
+                  <span className="text-rose-300/90 text-[11px]">{bufferAuthError}</span>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-1">
+                  <KeyRound className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    type="password"
+                    value={tokenInput}
+                    onChange={(e) => setTokenInput(e.target.value)}
+                    placeholder="Cole um novo Buffer Access Token aqui para reconectar..."
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveBufferToken}
+                  disabled={isSavingToken || !tokenInput.trim()}
+                  className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold cursor-pointer disabled:opacity-50 shrink-0"
+                >
+                  {isSavingToken ? "Validando..." : "Conectar Buffer"}
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* 1. Escolha o Projeto com Busca e Filtros */}
           <div className="flex flex-col gap-3">
@@ -255,6 +354,17 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                 placeholder="Pesquisar projetos (ex: devsync, promo, pdf, jm-motors)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <Link2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" />
+              <input
+                type="url"
+                placeholder="URL do site/deploy ao vivo (opcional, ex: https://jmmotorrs.vercel.app/)"
+                value={customLiveUrl}
+                onChange={(e) => setCustomLiveUrl(e.target.value)}
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-all"
               />
             </div>
@@ -582,26 +692,38 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
             )}
           </div>
 
-          {/* Visualizador Inteligente: Suporte a Carrossel Bento com Download PDF/PNG ou Motion Player */}
+          {/* Visualizador Inteligente: Carrossel Bento, Vídeo MP4 Real, Gravador Canvas 9:16 ou Captura Real */}
           {activeJob && activeJob.assetType === "carousel" ? (
             <BentoCarouselViewer 
               slides={activeJob.carouselSlides || generateBentoCarouselData(activeJob.project, activeJob.projectDesc || "")} 
               projectName={activeJob.project} 
             />
+          ) : activeJob && activeJob.assetType === "video" && !activeJob.hasRealMp4 ? (
+            <CanvasMotionRecorder
+              projectName={activeJob.project}
+              projectDesc={activeJob.projectDesc || ""}
+              styleName={VIDEO_STYLES_CATALOG.find((s) => s.id === activeJob.style)?.name || activeJob.style}
+              screenshotUrl={activeJob.screenshotUrl || activeJob.assetUrl}
+              liveUrl={activeJob.liveUrl}
+            />
           ) : (
             <div className="relative aspect-[9/14] sm:aspect-video w-full bg-black rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center group shadow-2xl">
               {activeJob ? (
                 <div className="w-full h-full relative">
-                  {activeJob.previewUrl.endsWith(".html") || activeJob.previewUrl.includes("motion-preview") ? (
-                    <iframe
-                      src={activeJob.previewUrl}
-                      className="w-full h-full border-0 pointer-events-auto"
-                      title="Vídeo Motion Gerado"
+                  {activeJob.assetType === "video" && activeJob.hasRealMp4 ? (
+                    <video
+                      src={activeJob.assetUrl}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-contain bg-black"
                     />
                   ) : (
                     <img
-                      src={activeJob.assetUrl}
-                      alt="Mockup do Projeto"
+                      src={activeJob.screenshotUrl || activeJob.assetUrl}
+                      alt={`Captura real de ${activeJob.project}`}
                       className="w-full h-full object-cover"
                     />
                   )}
@@ -611,13 +733,13 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                       target="_blank"
                       rel="noreferrer"
                       className="bg-black/70 hover:bg-black text-white p-2 rounded-xl backdrop-blur-md border border-zinc-700 transition-all"
-                      title="Abrir em Tela Cheia"
+                      title="Abrir Motion HTML em Tela Cheia"
                     >
                       <Maximize2 className="w-4 h-4" />
                     </a>
                     <a
                       href={activeJob.assetUrl}
-                      download={`socialcraft-${activeJob.project}.mp4`}
+                      download={`socialcraft-${activeJob.project}.${activeJob.hasRealMp4 && activeJob.assetType === "video" ? "mp4" : "png"}`}
                       target="_blank"
                       rel="noreferrer"
                       className="bg-cyan-500 hover:bg-cyan-400 text-black p-2 rounded-xl font-bold backdrop-blur-md transition-all flex items-center gap-1 text-xs"
@@ -632,22 +754,41 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
                   <Film className="w-12 h-12 mb-3 opacity-30 text-zinc-500" />
                   <p className="text-xs font-semibold text-zinc-400">Nenhum asset renderizado ainda</p>
                   <p className="text-[11px] text-zinc-600 mt-1 max-w-xs">
-                    Quando os agentes finalizarem, o player interativo tocará a animação 9:16 ou o mockup 3D aqui.
+                    Quando os agentes finalizarem, o player tocará o vídeo real do projeto, o gravador 9:16 ou a captura de tela aqui.
                   </p>
                 </div>
               )}
             </div>
           )}
 
-          {/* Dados de Agendamento do Buffer Confirmados */}
+          {/* Status Honesto do Buffer */}
           {activeJob && (
-            <div className="bg-zinc-950/90 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-2 text-xs">
+            <div className={`border rounded-2xl p-4 flex flex-col gap-2 text-xs ${
+              activeJob.bufferStatus === "error"
+                ? "bg-rose-950/30 border-rose-500/40"
+                : activeJob.bufferStatus === "partial"
+                ? "bg-amber-950/30 border-amber-500/40"
+                : "bg-zinc-950/90 border-zinc-800"
+            }`}>
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400 font-mono text-[10px]">BUFFER STATUS:</span>
-                <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Sincronizado com Mídia
-                </span>
+                {activeJob.bufferStatus === "error" ? (
+                  <span className="text-rose-400 font-mono font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5" /> Falha no Envio
+                  </span>
+                ) : activeJob.bufferStatus === "local_only" ? (
+                  <span className="text-zinc-400 font-mono font-bold">Gerado Localmente (Envio Desativado)</span>
+                ) : (
+                  <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Sincronizado com Mídia
+                  </span>
+                )}
               </div>
+              {activeJob.bufferErrorMessage && (
+                <p className="text-[11px] text-rose-300 bg-rose-950/50 p-2 rounded-lg border border-rose-500/30">
+                  {activeJob.bufferErrorMessage}
+                </p>
+              )}
               <div className="text-[11px] text-zinc-300">
                 <strong className="text-white">Horário Agendado:</strong> {new Date(activeJob.scheduledTime).toLocaleString("pt-BR")}
               </div>

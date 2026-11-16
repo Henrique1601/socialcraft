@@ -61,7 +61,7 @@ export async function GET() {
     });
 
     const data = await res.json();
-    if (data?.result?.content?.[0]?.text) {
+    if (res.ok && data?.result?.content?.[0]?.text) {
       const parsedChannels = JSON.parse(data.result.content[0].text);
       return NextResponse.json({
         connected: true,
@@ -70,8 +70,9 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      connected: true,
-      channels: FALLBACK_CHANNELS
+      connected: false,
+      channels: FALLBACK_CHANNELS,
+      error: data?.error?.message || `HTTP ${res.status}: Token do Buffer expirado ou inválido.`
     });
   } catch (error: any) {
     return NextResponse.json({
