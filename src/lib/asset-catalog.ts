@@ -1,5 +1,5 @@
-// Catálogo real de assets do SocialCraft (sem placeholders ou vídeos genéricos como big_buck_bunny).
-// Prioriza MP4s e mockups reais já renderizados no repositório/CDN ou captura ao vivo da URL do projeto.
+// Catálogo real de assets do SocialCraft (zero URLs mortas, zero placeholders).
+// Prioriza MP4s reais no próprio domínio ou captura via proxy same-origin sem CORS.
 
 export interface ProjectAssetBundle {
   videoUrl: string | null;
@@ -21,26 +21,6 @@ const REAL_VIDEO_ASSETS: Record<string, { videoUrl: string; imageUrl: string; st
     videoUrl: `${BASE_ORIGIN}/samples/jm-motors-pov-reels.mp4`,
     imageUrl: `${BASE_ORIGIN}/samples/jm-motors-post.png`,
     storyUrl: `${BASE_ORIGIN}/samples/jm-motors-story.png`
-  },
-  promocraft: {
-    videoUrl: "https://quick-lavoisier.vercel.app/promocraft_story_1080x1920.mp4",
-    imageUrl: "https://quick-lavoisier.vercel.app/promocraft_story_thumb.png",
-    storyUrl: "https://quick-lavoisier.vercel.app/promocraft_story_thumb.png"
-  },
-  devsync: {
-    videoUrl: "https://quick-lavoisier.vercel.app/devsync_story_1080x1920.mp4",
-    imageUrl: "https://quick-lavoisier.vercel.app/devsync_story_thumb.png",
-    storyUrl: "https://quick-lavoisier.vercel.app/devsync_story_thumb.png"
-  },
-  hackercraft: {
-    videoUrl: "https://quick-lavoisier.vercel.app/hackercraft_story_1080x1920.mp4",
-    imageUrl: "https://quick-lavoisier.vercel.app/hackercraft_story_thumb.png",
-    storyUrl: "https://quick-lavoisier.vercel.app/hackercraft_story_thumb.png"
-  },
-  fotohidro: {
-    videoUrl: "https://quick-lavoisier.vercel.app/fotohidro_story_1080x1920.mp4",
-    imageUrl: "https://quick-lavoisier.vercel.app/fotohidro_story_thumb.png",
-    storyUrl: "https://quick-lavoisier.vercel.app/fotohidro_story_thumb.png"
   }
 };
 
@@ -63,19 +43,21 @@ export function getProjectAssets(
     }
   }
 
-  // Se o usuário informou uma URL ao vivo (ou o projeto tem URL GitHub/Deploy), gera captura real da tela
   const targetUrl =
     liveUrl && liveUrl.startsWith("http")
       ? liveUrl
       : `https://github.com/Henrique1601/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}`;
 
-  const realShot = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(targetUrl)}?w=1280`;
+  // Proxy same-origin evita bloqueio de CORS no HTML5 Canvas
+  const proxyShot = `/api/capture-screenshot?url=${encodeURIComponent(targetUrl)}&proxy=1`;
+  // URL pública absoluta para envio externo ao Buffer quando não houver MP4
+  const publicShot = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(targetUrl)}?w=1280`;
 
   return {
     videoUrl: null,
     hasRealMp4: false,
-    screenshotUrl: realShot,
-    mockup3DUrl: realShot,
-    thumbnailUrl: realShot
+    screenshotUrl: proxyShot,
+    mockup3DUrl: publicShot,
+    thumbnailUrl: publicShot
   };
 }

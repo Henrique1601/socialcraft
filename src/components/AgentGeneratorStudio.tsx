@@ -878,12 +878,12 @@ export function AgentGeneratorStudio({ onAssetDispatched }: AgentGeneratorStudio
               slides={activeJob.carouselSlides || generateBentoCarouselData(activeJob.project, activeJob.projectDesc || "")} 
               projectName={activeJob.project} 
             />
-          ) : activeJob && activeJob.assetType === "video" && !activeJob.hasRealMp4 ? (
+          ) : activeJob && activeJob.assetType === "video" && (!activeJob.hasRealMp4 || selectedStyle !== "style_02_pov_hands_on") ? (
             <CanvasMotionRecorder
               projectName={activeJob.project}
               projectDesc={activeJob.projectDesc || ""}
-              styleId={activeJob.style}
-              styleName={VIDEO_STYLES_CATALOG.find((s) => s.id === activeJob.style)?.name || activeJob.style}
+              styleId={selectedStyle}
+              styleName={VIDEO_STYLES_CATALOG.find((s) => s.id === selectedStyle)?.name || selectedStyle}
               highlightPhrase={highlightPhrase}
               screenshotUrl={activeJob.screenshotUrl || activeJob.assetUrl}
               liveUrl={activeJob.liveUrl}

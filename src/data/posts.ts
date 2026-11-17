@@ -2,6 +2,20 @@ import { SocialPost } from "@/types/social";
 
 export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
   {
+    id: "post-jmmotorrs-0",
+    project: "JM Motors Santos",
+    title: "1º Freela Landing Page (Motos)",
+    caption: "JM Motors Santos — Só falta arrumar o domínio com o cliente! Catálogo de motos, financiamento e WhatsApp direto.",
+    hashtags: ["#buildinpublic", "#freelancer", "#nextjs", "#landingpage"],
+    platform: "instagram",
+    status: "scheduled",
+    videoUrl: "/samples/jmmotorrs-pov-reels.mp4",
+    thumbnailUrl: "/samples/jmmotorrs-story.png",
+    styleName: "POV / Hands-on Live Action (Estilo 02)",
+    scheduledFor: "2026-11-14T15:00:00.000Z",
+    source: "agent"
+  },
+  {
     id: "post-prospector-1",
     project: "Prospector CRM",
     title: "Lançamento Oficial: Prospector CRM",
@@ -9,8 +23,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#crm", "#b2b", "#sales", "#softwareengineering"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/prospector_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/prospector_story_thumb.png",
+    videoUrl: "/samples/prospector_story_motion.html",
+    thumbnailUrl: "/samples/prospector_story_motion.html",
     styleName: "Cenas P&B Launch (Estilo 01)",
     scheduledFor: "2026-11-07T15:00:00.000Z",
     source: "agent"
@@ -23,8 +37,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#dev", "#programming", "#coding", "#gamification"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/devquest_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/devquest_story_thumb.png",
+    videoUrl: "/samples/devquest_story_motion.html",
+    thumbnailUrl: "/samples/devquest_story_motion.html",
     styleName: "Gamificação & Code (Estilo 01)",
     scheduledFor: "2026-11-08T15:00:00.000Z",
     source: "agent"
@@ -37,8 +51,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#pdf", "#software", "#desktop", "#privacy", "#productivity"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/omnipdf_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/omnipdf_story_thumb.png",
+    videoUrl: "/samples/omnipdf_story_motion.html",
+    thumbnailUrl: "/samples/omnipdf_story_motion.html",
     styleName: "Productivity & Privacy (Estilo 01)",
     scheduledFor: "2026-11-09T15:00:00.000Z",
     source: "agent"
@@ -51,8 +65,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#ai", "#jobs", "#careers", "#remotework", "#developer"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/jobhunter_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/jobhunter_story_thumb.png",
+    videoUrl: "/samples/jobhunter_story_motion.html",
+    thumbnailUrl: "/samples/jobhunter_story_motion.html",
     styleName: "Dashboard & Radar Glass (Estilo 04)",
     scheduledFor: "2026-11-10T15:00:00.000Z",
     source: "agent"
@@ -65,8 +79,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#git", "#devtools", "#programming", "#opensource"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/devsync_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/devsync_story_thumb.png",
+    videoUrl: "/samples/devsync_story_motion_v2.html",
+    thumbnailUrl: "/samples/devsync_story_motion_v2.html",
     styleName: "Terminal Cyber / Code Flow (Estilo 06)",
     scheduledFor: "2026-11-11T15:00:00.000Z",
     source: "agent"
@@ -79,8 +93,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#cybersecurity", "#infosec", "#redteam", "#ethicalhacking"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/hackercraft_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/hackercraft_story_thumb.png",
+    videoUrl: "/samples/hackercraft_story_motion_v2.html",
+    thumbnailUrl: "/samples/hackercraft_story_motion_v2.html",
     styleName: "POV / Hands-on Live Action (Estilo 02)",
     scheduledFor: "2026-11-12T15:00:00.000Z",
     source: "agent"
@@ -93,8 +107,8 @@ export const INITIAL_SCHEDULED_POSTS: SocialPost[] = [
     hashtags: ["#pwa", "#mobile", "#offlinefirst", "#engineering"],
     platform: "instagram",
     status: "scheduled",
-    videoUrl: "https://quick-lavoisier.vercel.app/fotohidro_story_1080x1920.mp4",
-    thumbnailUrl: "https://quick-lavoisier.vercel.app/fotohidro_story_thumb.png",
+    videoUrl: "/samples/fotohidro_story_motion.html",
+    thumbnailUrl: "/samples/fotohidro_story_motion.html",
     styleName: "Mobile Utility (Estilo 05)",
     scheduledFor: "2026-11-13T15:00:00.000Z",
     source: "agent"

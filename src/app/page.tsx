@@ -29,8 +29,8 @@ export default function Home() {
       hashtags: job.hashtags || ["#buildinpublic", "#softwareengineering"],
       platform: "instagram",
       status: "scheduled",
-      videoUrl: job.assetUrl || "https://quick-lavoisier.vercel.app/devsync_story_1080x1920.mp4",
-      thumbnailUrl: job.previewUrl || "https://quick-lavoisier.vercel.app/devsync_story_thumb.png",
+      videoUrl: job.assetUrl || "/samples/devsync_story_motion_v2.html",
+      thumbnailUrl: job.previewUrl || "/samples/devsync_story_motion_v2.html",
       styleName: job.style || "Estilo 06: Terminal Cyber",
       scheduledFor: job.scheduledTime || new Date(Date.now() + 86400000 * 3).toISOString(),
       source: "agent"

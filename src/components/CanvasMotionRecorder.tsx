@@ -83,7 +83,7 @@ export function CanvasMotionRecorder({
       const W = canvas.width;
       const H = canvas.height;
 
-      // 1. Fundo Studio por Estilo
+      // 1. Fundo Studio
       ctx.fillStyle = palette.bg;
       ctx.fillRect(0, 0, W, H);
 
@@ -93,17 +93,7 @@ export function CanvasMotionRecorder({
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      // Efeito especial para Estilo 08 (Kinetic Text fundo)
-      if (styleId === "style_08_kinetic_text") {
-        ctx.save();
-        ctx.globalAlpha = 0.06;
-        ctx.fillStyle = palette.primary;
-        ctx.font = "900 92px system-ui, sans-serif";
-        ctx.fillText(projectName.toUpperCase(), 20 - elapsed * 120, 740);
-        ctx.restore();
-      }
-
-      // 2. HUD Badge
+      // 2. HUD Badge do Estilo
       ctx.fillStyle = "rgba(24, 24, 27, 0.9)";
       ctx.strokeStyle = palette.primary;
       ctx.lineWidth = 1.5;
@@ -130,7 +120,7 @@ export function CanvasMotionRecorder({
       ctx.font = "15px system-ui, sans-serif";
       ctx.fillText((projectDesc || "Projeto em produção").slice(0, 48), 30, 142);
 
-      // 4. Banner de Destaque (se o usuário informou uma frase em destaque)
+      // 4. Frase em Destaque (opcional)
       const hasHighlight = !!highlightPhrase && highlightPhrase.trim().length > 0;
       if (hasHighlight) {
         ctx.fillStyle = "rgba(127, 29, 29, 0.85)";
@@ -146,111 +136,239 @@ export function CanvasMotionRecorder({
         ctx.fillText(highlightPhrase!.trim().slice(0, 44), 46, 195);
       }
 
-      // 5. Janela Browser com Screenshot Real
-      const cardX = 30;
-      const cardY = hasHighlight ? 234 : 185;
-      const cardW = W - 60;
-      const cardH = hasHighlight ? 350 : 385;
+      const stageX = 30;
+      const stageY = hasHighlight ? 234 : 185;
+      const stageW = W - 60;
+      const stageH = hasHighlight ? 410 : 450;
 
-      ctx.fillStyle = "#18181b";
-      ctx.strokeStyle = "rgba(255,255,255,0.14)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.roundRect(cardX, cardY, cardW, cardH, 16);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "#27272a";
-      ctx.beginPath();
-      ctx.roundRect(cardX, cardY, cardW, 28, [16, 16, 0, 0]);
-      ctx.fill();
-      ["#ef4444", "#f59e0b", "#10b981"].forEach((c, idx) => {
-        ctx.fillStyle = c;
-        ctx.beginPath();
-        ctx.arc(cardX + 16 + idx * 14, cardY + 14, 4, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      if (imgLoaded && imgRef.current) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(cardX + 2, cardY + 30, cardW - 4, cardH - 32, [0, 0, 14, 14]);
-        ctx.clip();
-        const scale = 1 + Math.sin(elapsed * Math.PI) * 0.04;
-        const dw = (cardW - 4) * scale;
-        const dh = (cardH - 32) * scale;
-        ctx.drawImage(imgRef.current, cardX + 2 - (dw - (cardW - 4)) / 2, cardY + 30, dw, dh);
-        ctx.restore();
-      } else {
-        ctx.fillStyle = "#09090b";
-        ctx.fillRect(cardX + 2, cardY + 30, cardW - 4, cardH - 32);
-        ctx.fillStyle = palette.primary;
-        ctx.font = "bold 18px monospace";
-        ctx.fillText(">_ " + projectName, cardX + 24, cardY + 120);
-        ctx.fillStyle = "#71717a";
-        ctx.font = "13px monospace";
-        ctx.fillText(liveUrl || "Renderizando interface...", cardX + 24, cardY + 150);
-      }
-
-      // Scanlines para Terminal Cyber (style_06)
+      // 5. Renderizador Específico por Estilo Escolhido!
       if (styleId === "style_06_terminal_cyber") {
+        // ESTILO 06: TERMINAL CYBER / CODE FLOW
+        ctx.fillStyle = "#020617";
+        ctx.strokeStyle = "#22d3ee";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(stageX, stageY, stageW, stageH, 16);
+        ctx.fill();
+        ctx.stroke();
+
+        const lines = [
+          `$ git clone ${projectName.toLowerCase().replace(/\s+/g, "-")}`,
+          `> Resolving dependencies...`,
+          `> Compiling Next.js + TypeScript...`,
+          `✓ Build passed in 780ms`,
+          `> Deploying to Global Edge CDN...`,
+          `✓ Live: ${liveUrl ? liveUrl.replace(/^https?:\/\//, "").slice(0, 28) : "200 OK"}`
+        ];
+        const visibleCount = Math.min(lines.length, Math.floor(elapsed * (lines.length + 1)) + 1);
+        ctx.font = "bold 15px monospace";
+        lines.slice(0, visibleCount).forEach((ln, idx) => {
+          ctx.fillStyle = ln.startsWith("✓") ? "#34d399" : ln.startsWith("$") ? "#22d3ee" : "#94a3b8";
+          ctx.fillText(ln, stageX + 22, stageY + 54 + idx * 46);
+        });
+
+        // CRT Scanlines
         ctx.fillStyle = "rgba(34, 211, 238, 0.05)";
-        for (let sy = cardY + 30; sy < cardY + cardH; sy += 6) {
-          ctx.fillRect(cardX + 2, sy, cardW - 4, 1);
+        for (let sy = stageY + 8; sy < stageY + stageH - 8; sy += 6) {
+          ctx.fillRect(stageX + 4, sy, stageW - 8, 1);
         }
-      }
+      } else if (styleId === "style_04_bento_grid") {
+        // ESTILO 04: BENTO GRID DINÂMICO
+        const activeCell = Math.floor(elapsed * 4) % 4;
+        const cells = [
+          { label: "01 // ARQUITETURA", val: "Next.js + Edge" },
+          { label: "02 // PERFORMANCE", val: "99/100 Core Vitals" },
+          { label: "03 // RESPONSIVO", val: "Desktop & Mobile" },
+          { label: "04 // CONVERSÃO", val: "WhatsApp + CTA" }
+        ];
+        const cw = (stageW - 14) / 2;
+        const ch = (stageH - 14) / 2;
+        cells.forEach((c, idx) => {
+          const col = idx % 2;
+          const row = Math.floor(idx / 2);
+          const bx = stageX + col * (cw + 14);
+          const by = stageY + row * (ch + 14);
+          const isLit = idx === activeCell;
+          ctx.fillStyle = isLit ? "rgba(56, 189, 248, 0.16)" : "#111827";
+          ctx.strokeStyle = isLit ? "#38bdf8" : "rgba(255,255,255,0.1)";
+          ctx.lineWidth = isLit ? 2.5 : 1.5;
+          ctx.beginPath();
+          ctx.roundRect(bx, by, cw, ch, 18);
+          ctx.fill();
+          ctx.stroke();
 
-      // Divisor Before/After para style_03
-      if (styleId === "style_03_before_after") {
-        const splitX = cardX + cardW * (0.3 + 0.4 * Math.sin(elapsed * Math.PI));
-        ctx.strokeStyle = palette.primary;
-        ctx.lineWidth = 3;
+          ctx.fillStyle = "#38bdf8";
+          ctx.font = "bold 12px monospace";
+          ctx.fillText(c.label, bx + 18, by + 40);
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 20px system-ui, sans-serif";
+          ctx.fillText(c.val, bx + 18, by + 90);
+        });
+      } else if (styleId === "style_08_kinetic_text") {
+        // ESTILO 08: KINETIC TYPOGRAPHY
+        const words = [projectName.toUpperCase().slice(0, 14), "ZERO ATRASO", "DESIGN REAL", "NO AR AGORA"];
+        const idx = Math.floor(elapsed * 4) % words.length;
+        const pulse = 1 + Math.sin(elapsed * Math.PI * 8) * 0.05;
+        ctx.save();
+        ctx.translate(W / 2, stageY + stageH / 2);
+        ctx.scale(pulse, pulse);
+        ctx.fillStyle = "#facc15";
+        ctx.textAlign = "center";
+        ctx.font = "900 46px system-ui, sans-serif";
+        ctx.fillText(words[idx], 0, 12);
+        ctx.restore();
+        ctx.textAlign = "left";
+      } else if (styleId === "style_09_pain_to_relief") {
+        // ESTILO 09: PAIN TO RELIEF
+        const isRelief = elapsed >= 0.45;
+        ctx.fillStyle = isRelief ? "rgba(16, 185, 129, 0.14)" : "rgba(239, 68, 68, 0.16)";
+        ctx.strokeStyle = isRelief ? "#10b981" : "#ef4444";
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.moveTo(splitX, cardY + 30);
-        ctx.lineTo(splitX, cardY + cardH);
+        ctx.roundRect(stageX, stageY, stageW, stageH, 20);
+        ctx.fill();
         ctx.stroke();
-      }
 
-      // 6. Cursor POV animado + Ripple
-      const cx = cardX + 80 + Math.sin(elapsed * Math.PI * 2) * 140 + 140;
-      const cy = cardY + 140 + Math.cos(elapsed * Math.PI * 2) * 60 + 40;
+        ctx.fillStyle = isRelief ? "#34d399" : "#f87171";
+        ctx.font = "bold 18px monospace";
+        ctx.fillText(isRelief ? "✓ SOLUÇÃO APLICADA" : "⚠ PROBLEMA IDENTIFICADO", stageX + 28, stageY + 75);
 
-      if (elapsed > 0.35 && elapsed < 0.65) {
-        const rp = (elapsed - 0.35) / 0.3;
-        ctx.strokeStyle = palette.primary;
-        ctx.globalAlpha = 1 - rp;
-        ctx.lineWidth = 3;
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 30px system-ui, sans-serif";
+        ctx.fillText(isRelief ? "Rápido, limpo e no ar." : "Fluxo lento e manual.", stageX + 28, stageY + 135);
+      } else if (styleId === "style_10_satisfying_loop") {
+        // ESTILO 10: SATISFYING WORKFLOW LOOP
+        const steps = ["1. Captura do Projeto", "2. Render Motion 9:16", "3. Publicação Automática"];
+        const activeStep = Math.floor(elapsed * 3) % 3;
+        steps.forEach((st, idx) => {
+          const sy = stageY + 30 + idx * 120;
+          const isLit = idx <= activeStep;
+          ctx.fillStyle = isLit ? "rgba(52, 211, 153, 0.16)" : "#18181b";
+          ctx.strokeStyle = isLit ? "#34d399" : "rgba(255,255,255,0.1)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(stageX, sy, stageW, 92, 16);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = isLit ? "#34d399" : "#71717a";
+          ctx.font = "bold 20px system-ui, sans-serif";
+          ctx.fillText(st, stageX + 24, sy + 54);
+        });
+      } else if (styleId === "style_01_cinematic_teaser") {
+        // ESTILO 01: CINEMATIC APPLE TEASER (Minimalista P&B)
+        const alpha = Math.min(1, elapsed * 2.2);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = "#111111";
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.arc(cx, cy, 8 + rp * 26, 0, Math.PI * 2);
+        ctx.roundRect(stageX, stageY, stageW, stageH, 24);
+        ctx.fill();
         ctx.stroke();
-        ctx.globalAlpha = 1;
+
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 36px system-ui, sans-serif";
+        ctx.fillText(projectName.slice(0, 18), W / 2, stageY + stageH / 2 - 10);
+        ctx.fillStyle = "#a1a1aa";
+        ctx.font = "16px system-ui, sans-serif";
+        ctx.fillText("Minimalismo. Velocidade. Precisão.", W / 2, stageY + stageH / 2 + 28);
+        ctx.restore();
+        ctx.textAlign = "left";
+      } else {
+        // ESTILOS VISUAIS COM SCREENSHOT (02 POV, 03 Before/After, 05 Micro-Feature, 07 3D Perspective)
+        ctx.save();
+        if (styleId === "style_07_interactive_3d") {
+          ctx.translate(W / 2, stageY + stageH / 2);
+          ctx.rotate(Math.sin(elapsed * Math.PI * 2) * 0.03);
+          ctx.translate(-W / 2, -(stageY + stageH / 2));
+        }
+
+        ctx.fillStyle = "#18181b";
+        ctx.strokeStyle = "rgba(255,255,255,0.14)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(stageX, stageY, stageW, stageH, 16);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#27272a";
+        ctx.beginPath();
+        ctx.roundRect(stageX, stageY, stageW, 28, [16, 16, 0, 0]);
+        ctx.fill();
+        ["#ef4444", "#f59e0b", "#10b981"].forEach((c, idx) => {
+          ctx.fillStyle = c;
+          ctx.beginPath();
+          ctx.arc(stageX + 16 + idx * 14, stageY + 14, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        if (imgLoaded && imgRef.current) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(stageX + 2, stageY + 30, stageW - 4, stageH - 32, [0, 0, 14, 14]);
+          ctx.clip();
+          const zoomBase = styleId === "style_05_micro_feature" ? 1.18 : 1.0;
+          const scale = zoomBase + Math.sin(elapsed * Math.PI) * 0.05;
+          const dw = (stageW - 4) * scale;
+          const dh = (stageH - 32) * scale;
+          ctx.drawImage(imgRef.current, stageX + 2 - (dw - (stageW - 4)) / 2, stageY + 30, dw, dh);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = "#09090b";
+          ctx.fillRect(stageX + 2, stageY + 30, stageW - 4, stageH - 32);
+          ctx.fillStyle = palette.primary;
+          ctx.font = "bold 18px monospace";
+          ctx.fillText(">_ " + projectName, stageX + 24, stageY + 120);
+          ctx.fillStyle = "#71717a";
+          ctx.font = "13px monospace";
+          ctx.fillText(liveUrl || "Renderizando interface...", stageX + 24, stageY + 150);
+        }
+
+        if (styleId === "style_03_before_after") {
+          const splitX = stageX + stageW * (0.25 + 0.5 * Math.sin(elapsed * Math.PI));
+          ctx.strokeStyle = palette.primary;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(splitX, stageY + 30);
+          ctx.lineTo(splitX, stageY + stageH);
+          ctx.stroke();
+        }
+
+        if (styleId === "style_02_pov_hands_on") {
+          const cx = stageX + 80 + Math.sin(elapsed * Math.PI * 2) * 140 + 140;
+          const cy = stageY + 140 + Math.cos(elapsed * Math.PI * 2) * 60 + 40;
+          if (elapsed > 0.35 && elapsed < 0.65) {
+            const rp = (elapsed - 0.35) / 0.3;
+            ctx.strokeStyle = palette.primary;
+            ctx.globalAlpha = 1 - rp;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 8 + rp * 26, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+          ctx.fillStyle = "#ffffff";
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx, cy + 20);
+          ctx.lineTo(cx + 6, cy + 15);
+          ctx.lineTo(cx + 11, cy + 23);
+          ctx.lineTo(cx + 15, cy + 21);
+          ctx.lineTo(cx + 10, cy + 13);
+          ctx.lineTo(cx + 17, cy + 13);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.restore();
       }
 
-      ctx.fillStyle = "#ffffff";
-      ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx, cy + 20);
-      ctx.lineTo(cx + 6, cy + 15);
-      ctx.lineTo(cx + 11, cy + 23);
-      ctx.lineTo(cx + 15, cy + 21);
-      ctx.lineTo(cx + 10, cy + 13);
-      ctx.lineTo(cx + 17, cy + 13);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      // 7. Tooltip + Rodapé URL + Barra de Progresso
-      const tipY = cardY + cardH + 22;
-      ctx.fillStyle = palette.primary;
-      ctx.beginPath();
-      ctx.roundRect(30, tipY, 310, 38, 10);
-      ctx.fill();
-      ctx.fillStyle = "#000000";
-      ctx.font = "bold 14px system-ui, sans-serif";
-      ctx.fillText("POV: Navegação Real & Responsiva", 44, tipY + 24);
-
+      // 6. Rodapé URL + Barra de Progresso
       if (liveUrl) {
         ctx.fillStyle = "#18181b";
         ctx.strokeStyle = "rgba(255,255,255,0.2)";

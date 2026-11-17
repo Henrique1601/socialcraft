@@ -10,6 +10,8 @@ interface MockupPlayerProps {
 }
 
 export function MockupPlayer({ videoUrl, format = "story", title }: MockupPlayerProps) {
+  const isHtmlMotion = videoUrl.endsWith(".html") || videoUrl.includes("motion-preview");
+
   if (format === "story") {
     return (
       <div className="flex flex-col items-center">
@@ -23,16 +25,23 @@ export function MockupPlayer({ videoUrl, format = "story", title }: MockupPlayer
           <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-30 flex items-center justify-end px-2">
             <div className="w-2.5 h-2.5 bg-zinc-900 rounded-full"></div>
           </div>
-          {/* Video element */}
-          <video
-            src={videoUrl}
-            controls
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
+          {isHtmlMotion ? (
+            <iframe
+              src={videoUrl}
+              title={title || "Motion Preview"}
+              className="w-full h-full border-0"
+            />
+          ) : (
+            <video
+              src={videoUrl}
+              controls
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
       </div>
     );
