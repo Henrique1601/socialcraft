@@ -125,5 +125,7 @@ export const VIDEO_STYLES_CATALOG = [
   { id: "style_07_interactive_3d", name: "07. Interactive 3D Perspective Tilt", desc: "Mockup 3D flutuando em ângulo isométrico com física de vidro líquido e reflexos." },
   { id: "style_08_kinetic_text", name: "08. High-Retention Kinetic Typography", desc: "Palavras gigantes animadas no centro no ritmo para alta retenção em Reels." },
   { id: "style_09_pain_to_relief", name: "09. Pain-to-Relief Storytelling", desc: "Alerta vermelho de estresse e erro que transiciona para a clareza e alívio do software." },
-  { id: "style_10_satisfying_loop", name: "10. Satisfying Workflow Loop", desc: "Fluxo ponta a ponta perfeito que faz um loop contínuo e hipnótico." }
+  { id: "style_10_satisfying_loop", name: "10. Satisfying Workflow Loop", desc: "Fluxo ponta a ponta perfeito que faz um loop contínuo e hipnótico." },
+  { id: "style_11_tech_stack_pills", name: "11. Dark Neon Tech Stack Pills", desc: "Fundo escuro com destaque verde-lima, pílulas flutuantes das tecnologias e CTA neon (estilo FullCycle)." },
+  { id: "style_12_editorial_made_in_br", name: "12. Editorial Cream & Made in Brazil", desc: "Fundo creme editorial, tipografia serifada, barra verde/amarela/azul e selo Made in Brazil (estilo MatLivre)." }
 ];

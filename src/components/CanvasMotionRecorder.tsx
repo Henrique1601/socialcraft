@@ -24,7 +24,9 @@ const STYLE_PALETTES: Record<string, { primary: string; glow: string; bg: string
   style_07_interactive_3d: { primary: "#ec4899", glow: "rgba(236,72,153,0.20)", bg: "#09090b" },
   style_08_kinetic_text: { primary: "#facc15", glow: "rgba(250,204,21,0.20)", bg: "#09090b" },
   style_09_pain_to_relief: { primary: "#ef4444", glow: "rgba(239,68,68,0.22)", bg: "#09090b" },
-  style_10_satisfying_loop: { primary: "#34d399", glow: "rgba(52,211,153,0.20)", bg: "#09090b" }
+  style_10_satisfying_loop: { primary: "#34d399", glow: "rgba(52,211,153,0.20)", bg: "#09090b" },
+  style_11_tech_stack_pills: { primary: "#b4f72e", glow: "rgba(180,247,46,0.16)", bg: "#080c09" },
+  style_12_editorial_made_in_br: { primary: "#15803d", glow: "rgba(21,128,61,0.08)", bg: "#f6f3ea" }
 };
 
 export function CanvasMotionRecorder({
@@ -82,6 +84,238 @@ export function CanvasMotionRecorder({
       const elapsed = ((now - start) % 6000) / 6000;
       const W = canvas.width;
       const H = canvas.height;
+
+      // ESTILO 11: DARK NEON TECH STACK PILLS (Estilo FullCycle)
+      if (styleId === "style_11_tech_stack_pills") {
+        ctx.fillStyle = "#080c09";
+        ctx.fillRect(0, 0, W, H);
+        const limeGlow = ctx.createRadialGradient(W * 0.78, H * 0.78, 10, W * 0.78, H * 0.78, 360);
+        limeGlow.addColorStop(0, "rgba(180, 247, 46, 0.18)");
+        limeGlow.addColorStop(1, "rgba(8, 12, 9, 0)");
+        ctx.fillStyle = limeGlow;
+        ctx.fillRect(0, 0, W, H);
+
+        // Top Brand + Outlined Pill
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 22px system-ui, sans-serif";
+        ctx.fillText("HB", 36, 68);
+        ctx.fillStyle = "#b4f72e";
+        ctx.fillText("Studio", 68, 68);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.28)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(W - 230, 44, 194, 34, 17);
+        ctx.stroke();
+        ctx.fillStyle = "#e4e4e7";
+        ctx.font = "12px system-ui, sans-serif";
+        ctx.fillText("Projeto em produção", W - 205, 65);
+
+        // Giant 3-line Headline with Lime middle line
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 38px system-ui, sans-serif";
+        ctx.fillText("Conheça o novo", 36, 155);
+        ctx.fillStyle = "#b4f72e";
+        ctx.fillText(projectName.slice(0, 19), 36, 203);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("na prática", 36, 251);
+
+        // Subtitle
+        ctx.fillStyle = "#a1a1aa";
+        ctx.font = "16px system-ui, sans-serif";
+        ctx.fillText((projectDesc || "Arquitetura moderna e deploy em produção.").slice(0, 46), 36, 300);
+
+        if (highlightPhrase?.trim()) {
+          ctx.fillStyle = "rgba(180, 247, 46, 0.12)";
+          ctx.strokeStyle = "#b4f72e";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(36, 326, W - 72, 46, 12);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#b4f72e";
+          ctx.font = "bold 14px system-ui, sans-serif";
+          ctx.fillText(highlightPhrase.trim().slice(0, 45), 50, 354);
+        }
+
+        // Floating Tilted Tech Stack Pills
+        const pills = [
+          { label: "Next.js 16", color: "#ffffff", x: 46, y: 420 },
+          { label: "React 19", color: "#38bdf8", x: 196, y: 408 },
+          { label: "TypeScript", color: "#3b82f6", x: 344, y: 400 },
+          { label: "Docker", color: "#0ea5e9", x: 42, y: 492 },
+          { label: "Tailwind", color: "#22d3ee", x: 176, y: 482 },
+          { label: "Node.js", color: "#4ade80", x: 320, y: 472 },
+          { label: "PostgreSQL", color: "#60a5fa", x: 64, y: 564 },
+          { label: "Vercel Edge", color: "#b4f72e", x: 244, y: 552 },
+          { label: "IA Agents", color: "#f97316", x: 150, y: 632 }
+        ];
+
+        pills.forEach((p, idx) => {
+          const bob = Math.sin(elapsed * Math.PI * 2 + idx * 0.7) * 5;
+          ctx.save();
+          ctx.translate(p.x, p.y + bob);
+          ctx.rotate(-0.07);
+          ctx.fillStyle = "rgba(20, 26, 22, 0.94)";
+          ctx.strokeStyle = "rgba(255,255,255,0.12)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(0, 0, 134, 44, 12);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(20, 22, 5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#f4f4f5";
+          ctx.font = "bold 14px system-ui, sans-serif";
+          ctx.fillText(p.label, 34, 27);
+          ctx.restore();
+        });
+
+        // Bottom Neon Outlined CTA
+        ctx.strokeStyle = "#b4f72e";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(36, H - 140, 290, 52, 26);
+        ctx.stroke();
+        ctx.fillStyle = "#b4f72e";
+        ctx.font = "bold 16px system-ui, sans-serif";
+        ctx.fillText("CONFERIR PROJETO  →", 72, H - 108);
+
+        ctx.fillStyle = "#b4f72e";
+        ctx.fillRect(0, H - 6, W * elapsed, 6);
+        animId = requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      // ESTILO 12: EDITORIAL CREAM & MADE IN BRAZIL (Estilo MatLivre)
+      if (styleId === "style_12_editorial_made_in_br") {
+        ctx.fillStyle = "#f6f3ea";
+        ctx.fillRect(0, 0, W, H);
+
+        // Barra Superior Bandeira do Brasil (Verde / Amarelo / Azul)
+        ctx.fillStyle = "#009c3b";
+        ctx.fillRect(0, 0, W / 3, 10);
+        ctx.fillStyle = "#ffdf00";
+        ctx.fillRect(W / 3, 0, W / 3, 10);
+        ctx.fillStyle = "#002776";
+        ctx.fillRect((W / 3) * 2, 0, W / 3, 10);
+
+        // App Icon Box
+        ctx.fillStyle = "#2563eb";
+        ctx.beginPath();
+        ctx.roundRect(36, 48, 60, 60, 14);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 28px Georgia, serif";
+        ctx.fillText(projectName.slice(0, 2).toUpperCase(), 48, 88);
+
+        // Editorial Serif Title (2-tone)
+        const parts = projectName.split(" ");
+        ctx.fillStyle = "#18181b";
+        ctx.font = "bold 44px Georgia, serif";
+        ctx.fillText(parts[0]?.slice(0, 14) || projectName.slice(0, 14), 36, 168);
+        if (parts[1]) {
+          ctx.fillStyle = "#15803d";
+          ctx.font = "italic bold 44px Georgia, serif";
+          ctx.fillText(parts.slice(1).join(" ").slice(0, 18), 36, 218);
+        }
+
+        // Crisp Editorial Subtitle
+        ctx.fillStyle = "#3f3f46";
+        ctx.font = "20px system-ui, sans-serif";
+        ctx.fillText((projectDesc || "Software moderno de alta velocidade").slice(0, 42), 36, 272);
+
+        if (highlightPhrase?.trim()) {
+          ctx.fillStyle = "#15803d";
+          ctx.font = "bold 16px system-ui, sans-serif";
+          ctx.fillText(highlightPhrase.trim().slice(0, 46), 36, 314);
+        } else {
+          ctx.fillStyle = "#15803d";
+          ctx.font = "bold 16px monospace";
+          ctx.fillText("fast • open source • made in brazil", 36, 314);
+        }
+
+        // Light UI Screenshot Card with soft drop shadow
+        const cardX = 36;
+        const cardY = 355;
+        const cardW = W - 72;
+        const cardH = 420;
+
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.12)";
+        ctx.shadowBlur = 24;
+        ctx.shadowOffsetY = 12;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.roundRect(cardX, cardY, cardW, cardH, 16);
+        ctx.fill();
+        ctx.restore();
+
+        if (imgLoaded && imgRef.current) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(cardX + 4, cardY + 4, cardW - 8, cardH - 8, 12);
+          ctx.clip();
+          const scale = 1 + Math.sin(elapsed * Math.PI) * 0.03;
+          ctx.drawImage(imgRef.current, cardX + 4, cardY + 4, (cardW - 8) * scale, (cardH - 8) * scale);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = "#f4f4f5";
+          ctx.beginPath();
+          ctx.roundRect(cardX + 12, cardY + 12, cardW - 24, cardH - 24, 12);
+          ctx.fill();
+          ctx.fillStyle = "#18181b";
+          ctx.font = "bold 20px Georgia, serif";
+          ctx.fillText(projectName, cardX + 32, cardY + 80);
+          ctx.fillStyle = "#52525b";
+          ctx.font = "14px monospace";
+          ctx.fillText(liveUrl || "https://socialcraft-eight.vercel.app", cardX + 32, cardY + 114);
+        }
+
+        // Floating "MADE IN BRAZIL" Pill Badge
+        const bx = W - 268;
+        const by = cardY + cardH - 28;
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.14)";
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = "#faf7ee";
+        ctx.strokeStyle = "rgba(0,0,0,0.08)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, 224, 48, 24);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Mini Bandeira BR
+        ctx.fillStyle = "#009c3b";
+        ctx.fillRect(bx + 18, by + 15, 24, 17);
+        ctx.fillStyle = "#ffdf00";
+        ctx.beginPath();
+        ctx.moveTo(bx + 30, by + 17);
+        ctx.lineTo(bx + 39, by + 23.5);
+        ctx.lineTo(bx + 30, by + 30);
+        ctx.lineTo(bx + 21, by + 23.5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#002776";
+        ctx.beginPath();
+        ctx.arc(bx + 30, by + 23.5, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#18181b";
+        ctx.font = "bold 13px system-ui, sans-serif";
+        ctx.fillText("MADE IN BRAZIL", bx + 52, by + 28);
+
+        ctx.fillStyle = "#15803d";
+        ctx.fillRect(0, H - 6, W * elapsed, 6);
+        animId = requestAnimationFrame(renderFrame);
+        return;
+      }
 
       // 1. Fundo Studio
       ctx.fillStyle = palette.bg;

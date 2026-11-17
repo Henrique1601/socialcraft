@@ -45,7 +45,7 @@ export default function Home() {
     { id: "analytics", label: "Analytics", icon: BarChart3, color: "text-amber-400", badge: false },
     { id: "inbox", label: "Galeria", icon: Bot, color: "text-purple-400", badge: false },
     { id: "studio", label: "Meu Upload", icon: UploadCloud, color: "text-blue-400", badge: false },
-    { id: "styles", label: "10 Estilos", icon: Film, color: "text-pink-400", badge: false },
+    { id: "styles", label: "12 Estilos", icon: Film, color: "text-pink-400", badge: false },
   ] as const;
 
   return (

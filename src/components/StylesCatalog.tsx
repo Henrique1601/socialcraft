@@ -10,9 +10,9 @@ export function StylesCatalog() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Film className="w-5 h-5 text-emerald-400" />
-          <h2 className="font-bold text-white text-lg">Catálogo dos 10 Estilos de Vídeo do Social-Publisher-Agent</h2>
+          <h2 className="font-bold text-white text-lg">Catálogo dos {VIDEO_STYLES_CATALOG.length} Estilos de Vídeo do Social-Publisher-Agent</h2>
         </div>
-        <span className="text-xs font-mono text-zinc-400">10 Prompts Parametrizados</span>
+        <span className="text-xs font-mono text-zinc-400">{VIDEO_STYLES_CATALOG.length} Prompts Parametrizados</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
